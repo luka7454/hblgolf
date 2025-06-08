@@ -67,7 +67,7 @@
         }
         
         .active {
-            color: #0a5e2f !important;
+            color: #279b61 !important;
             border-bottom: 2px solid #0a5e2f;
         }
         
@@ -211,10 +211,11 @@
         }
         
         .round-btn.active {
-            background-color: #1a75cf;
+            background-color: #c9e4ff;
             color: white;
             border-color: #1a75cf;
         }
+     
         
         .filter-options {
             display: flex;
@@ -509,10 +510,10 @@
         <!-- 라운딩 정보 헤더 -->
         <div class="round-header">
             <div class="round-title">
-                <h1 class="round-name">밀양 에스파크 라운딩</h1>
-                <div class="round-date">2025.05.11 (일) 오전 7:00 티오프</div>
-                <div class="round-venue">밀양 에스파크 골프장 (IN/OUT 코스)</div>
-                <div class="round-weather">날씨: 맑음, 기온: 22°C, 바람: 약함</div>
+                <h1 class="round-name">스톤게이트CC 라운딩</h1>
+                <div class="round-date">2025.06.06 (금) 오전 6:05 티오프</div>
+                <div class="round-venue">스톤게이트CC</div>
+                <div class="round-weather">날씨: 맑음, 기온: 24°C, 바람: 약함</div>
             </div>
             
             <div class="round-info">
@@ -520,7 +521,7 @@
                     
                     <div class="winner-details">
                         <div class="winner-label">우승자</div>
-                        <div class="winner-name">김종혁 (99타)</div>
+                        <div class="winner-name">조영복 (95타)</div>
                     </div>
                 </div>
             </div>
@@ -546,9 +547,11 @@
             
             <h2 class="selector-title">2025 라운딩 기록</h2>
             <div class="round-list">
-                <button class="round-btn active" data-round="milyang">밀양 에스파크 (05.11)</button>
+                <button class="round-btn active" data-round="stonegate">스톤게이트CC (06.06)</button>
+                <button class="round-btn" data-round="milyang">밀양 에스파크 (05.11)</button>
                 <button class="round-btn" data-round="arimier">아리미르CC (04.04)</button>
                 <button class="round-btn" data-round="yangsan">양산CC (03.19)</button>
+                
             </div>
         </div>
         
@@ -646,6 +649,25 @@
     <script>
         // 대회별 데이터
         const tournamentData = {
+            stonegate: {
+                name: "스톤게이트CC 라운딩",
+                date: "2025.06.06 (금) 06:05 티오프",
+                venue: "스톤게이트CC",
+                weather: "날씨: 맑음, 기온: 24°C, 바람: 약함",
+                winner: "조영복",
+                winnerScore: "95타",
+                participants: 4,
+                avgScore: 108.3,
+                bestScore: 95,
+                roundTime: "4시간 45분",
+                records: [
+                    { rank: "1위", name: "조영복", photo: "images/bok2.jpg", score: 95, scoreClass: "best", birdie: 1, nearest: 0 },
+                    { rank: "2위", name: "김종혁", photo: "images/jay.png", score: 99, scoreClass: "good", birdie: 0, nearest: 0 },
+                    { rank: "3위", name: "김상현", photo: "images/sang.jpg", score: 105, scoreClass: "average", birdie: 0, nearest: 0 },
+                    { rank: "4위", name: "정인석", photo: "images/suk.PNG", score: 114, scoreClass: "poor", birdie: 0, nearest: 0 }
+                ],
+                review: "'거리충' 조영복 반전의 우승.. 잔디짬밥 무시못해.."
+            },
             milyang: {
                 name: "밀양 에스파크 라운딩",
                 date: "2025.05.11 (일) 13:35 티오프",
@@ -704,7 +726,11 @@
                 ],
                 review: "반전의 '아갈현' 김상현의 우승.. '훈수충' 멘탈 심하게 흔들려, 캐디 씨x년"
             }
+            
+
         };
+
+        
 
         // 페이지 로드 시 초기 데이터 설정
         function updateTournamentData(tournamentKey) {
@@ -795,7 +821,7 @@
         
         // 페이지 로드 시 기본 데이터 로드
         document.addEventListener('DOMContentLoaded', function() {
-            updateTournamentData('milyang');
+            updateTournamentData('stonegate');
         });
     </script>
 </body>
