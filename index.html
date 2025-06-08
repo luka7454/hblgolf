@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBL 골프 클럽</title>
+    <title>HBL 골프 클럽 - 회원 로그인</title>
     <style>
         * {
             margin: 0;
@@ -13,638 +13,405 @@
         }
         
         body {
-            background-color: #c9e6f0;
+            background: linear-gradient(135deg, #c9e6f0 0%, #a8d8e8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem 2rem;
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
+        /* 배경 애니메이션 */
+        .background-animation {
+            position: absolute;
             top: 0;
-            z-index: 1000;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .golf-ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+        
+        .golf-ball:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .golf-ball:nth-child(2) { top: 20%; left: 80%; animation-delay: 3s; }
+        .golf-ball:nth-child(3) { top: 60%; left: 20%; animation-delay: 6s; }
+        .golf-ball:nth-child(4) { top: 80%; left: 70%; animation-delay: 9s; }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0px) rotate(360deg); }
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            z-index: 2;
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .logo-section {
+            margin-bottom: 40px;
         }
         
         .logo-text {
             font-family: Arial, sans-serif;
             font-weight: 900;
-            font-size: 32px;
-            letter-spacing: -1px;
-            color: #000;
-        }
-        
-        .logo {
-            position: absolute;
-            left: 2rem;
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-menu li {
-            margin-left: 2rem;
-        }
-        
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-menu a:hover {
+            font-size: 48px;
+            letter-spacing: -2px;
             color: #0a5e2f;
-            border-bottom: 2px solid #0a5e2f;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
         
-        .active {
-            color: #0a5e2f !important;
-            border-bottom: 2px solid #0a5e2f;
+        .club-subtitle {
+            font-size: 18px;
+            color: #666;
+            font-weight: 300;
+            margin-bottom: 10px;
         }
         
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            position: absolute;
-            right: 2rem;
+        .member-only {
+            font-size: 14px;
+            color: #0a5e2f;
+            font-weight: 500;
+            background: linear-gradient(45deg, #e8f5e8, #f0f8f0);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
         }
         
-        .bar {
-            width: 25px;
-            height: 3px;
-            background-color: #333;
-            margin: 3px 0;
-            transition: all 0.3s ease;
+        .form-section {
+            margin-bottom: 30px;
         }
         
-        .content {
-            margin-top: 85px;
-            padding: 20px;
+        .form-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
         
-        /* 광고 배너 스타일 */
-        .ad-banner {
-            width: 100%;
-            text-align: center;
+        .form-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .password-input-container {
+            position: relative;
             margin-bottom: 20px;
         }
         
-        .banner-img {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        /* 카드 컨테이너 스타일 */
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        /* 카드 스타일 */
-        .card {
-            flex: 1;
-            min-width: 320px;
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .card-header {
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .card-title {
-            font-size: 20px;
-            color: #3366cc;
-            font-weight: bold;
-        }
-        
-        .more-link {
-            color: #3366cc;
-            text-decoration: none;
-        }
-        
-        /* 탭 메뉴 스타일 */
-        .tab-menu {
-            display: flex;
-            height: 40px;
-        }
-        
-        .feed-tab-menu .tab {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #466fb5;
-            color: white;
-            cursor: pointer;
-        }
-        
-        .feed-tab-menu .tab.active {
-            background-color: #38e495;
-        }
-        
-        .ranking-tab-menu .tab {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #466fb5;
-            color: white;
-            cursor: pointer;
-        }
-        
-        .ranking-tab-menu .tab.active {
-            background-color: #38e495;
-        }
-        
-        /* 대회 피드 콘텐츠 */
-        .feed-image-container {
-            position: relative;
-        }
-        
-        .feed-image {
+        .password-input {
             width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #0a5e2f;
+            box-shadow: 0 0 0 3px rgba(10, 94, 47, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .password-input::placeholder {
+            color: #bbb;
+            letter-spacing: normal;
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #0a5e2f, #0d7a3d);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(10, 94, 47, 0.3);
+        }
+        
+        .login-button:active {
+            transform: translateY(0);
+        }
+        
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .login-button:hover::before {
+            left: 100%;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 20%, 40%, 60%, 80%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        }
+        
+        .footer-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .golf-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
             display: block;
         }
         
-        .feed-title-overlay {
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+            
+            .logo-text {
+                font-size: 36px;
+            }
+            
+            .form-title {
+                font-size: 20px;
+            }
+            
+            .password-input {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+            
+            .login-button {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+        
+        /* 로딩 애니메이션 */
+        .loading {
+            display: none;
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(51, 51, 102, 0.8);
-            color: white;
-            padding: 15px;
-            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         
-        .feed-list {
-            padding: 0;
-            border-top: 1px solid #eee;
-        }
-        
-        .feed-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-            cursor: pointer;
-            text-align: left;
-        }
-        
-        .feed-item:hover {
-            background-color: #f5f5f5;
-        }
-        
-        /* 대회 정보 스타일 */
-        .info-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 10px;
-            background-color: #1a3380;
-        }
-        
-        .info-button {
-            flex: 1;
-            min-width: 120px;
-            margin: 5px;
-            padding: 10px;
-            text-align: center;
-            background-color: white;
-            border-radius: 5px;
-            position: relative;
-        }
-        
-        .info-button-title {
-            font-size: 14px;
-            color: #333;
-        }
-        
-        .info-button-value {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-        
-        .circle-icon {
-            position: absolute;
-            bottom: -8px;
-            right: -8px;
-            width: 24px;
-            height: 24px;
-            background-color: #38e495;
-            color: white;
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            animation: spin 1s linear infinite;
         }
         
-        .ticket-button {
-            background-color: #38e495;
-            color: white;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
-        .tournament-info {
-            padding: 15px;
-            text-align: left;
+        .button-text {
+            transition: opacity 0.3s ease;
         }
         
-        .info-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
+        .login-button.loading .button-text {
+            opacity: 0;
         }
         
-        .info-icon {
-            margin-right: 10px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .info-label {
-            min-width: 100px;
-            color: #666;
-        }
-        
-        .round-times {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 10px 0;
-        }
-        
-        .round-time {
-            flex: 0 0 calc(20% - 8px);
-            margin: 4px;
-            text-align: center;
-        }
-        
-        .round {
-            background-color: #999;
-            color: white;
-            padding: 4px 0;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .time {
-            padding: 4px 0;
-            font-size: 14px;
-            background-color: #f0f0f0;
-        }
-        
-        .sponsors {
-            display: flex;
-            margin-top: 20px;
-            padding: 10px 0;
-            border-top: 1px solid #eee;
-        }
-        
-        .sponsor {
-            margin-right: 15px;
-        }
-        
-        /* 랭킹 스타일 */
-        .top-player {
-            background: linear-gradient(to right, #666666, #999999);
-            color: white;
-            padding: 20px 15px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .top-player.first-rank {
-            background: linear-gradient(to right, #1a75cf, #3399ff);
-        }
-        
-        .rank-number {
-            font-size: 32px;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-        
-        .player-photo {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 3px solid white;
-            margin-right: 15px;
-            object-fit: cover;
-        }
-        
-        .player-name {
-            font-size: 20px;
-            font-weight: bold;
-            flex-grow: 1;
-        }
-        
-        .player-score {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        
-        .ranking-table {
-            width: 100%;
-        }
-        
-        .ranking-header {
-            display: flex;
-            padding: 12px 15px;
-            background-color: #f5f5f5;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .ranking-item {
-            display: flex;
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            align-items: center;
-        }
-        
-        .col-rank {
-            flex: 0 0 15%;
-            text-align: center;
-        }
-        
-        .col-name {
-            flex: 1;
-            text-align: left;
-        }
-        
-        .col-score {
-            flex: 0 0 30%;
-            text-align: right;
-            font-weight: bold;
-        }
-        
-        .sg-icon {
-            width: 40px;
-            height: 40px;
-            background-color: #f0f0f0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 10px;
-        }
-        
-        .arrow-right {
-            width: 12px;
-            height: 12px;
-            border-top: 2px solid #666;
-            border-right: 2px solid #666;
-            transform: rotate(45deg);
-        }
-        
-        @media (max-width: 992px) {
-            .card-container {
-                flex-direction: column;
-            }
-            
-            .card {
-                width: 100%;
-            }
-            
-            .info-button {
-                min-width: calc(50% - 10px);
-            }
-            
-            .round-time {
-                flex: 0 0 calc(33.33% - 8px);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                left: -100%;
-                top: 70px;
-                flex-direction: column;
-                background-color: #fff;
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
-                padding: 1rem 0;
-            }
-            
-            .nav-menu.active {
-                left: 0;
-            }
-            
-            .nav-menu li {
-                margin: 1rem 0;
-            }
-            
-            .menu-toggle {
-                display: flex;
-            }
-            
-            .header {
-                justify-content: flex-start;
-                padding-left: 1rem;
-            }
+        .login-button.loading .loading {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-text">HBL</div>
-        </div>
-        
-     <ul class="nav-menu">
-    <li><a href="index.html" class="active">ABOUT HBL</a></li>
-    <li><a href="schedule.html">일정</a></li>
-    <li><a href="tournament-records.html">리더보드</a></li>
-    <li><a href="tournament-records.html">기록</a></li>
-    <li><a href="players.html">선수정보</a></li>
-    <li><a href="#">이벤트</a></li>
-</ul>
-        
-        <div class="menu-toggle">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-    </header>
+    <div class="background-animation">
+        <div class="golf-ball"></div>
+        <div class="golf-ball"></div>
+        <div class="golf-ball"></div>
+        <div class="golf-ball"></div>
+    </div>
     
-    <div class="content">
-        <!-- 광고 배너 -->
-        <div class="ad-banner">
-            <img src="images/bokbanner.png" alt="광고 배너" class="banner-img">
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="golf-icon">🏌️‍♂️</div>
+            <div class="logo-text">HBL</div>
+            <div class="club-subtitle">Golf Club</div>
+            <div class="member-only">🔒 회원 전용 사이트</div>
         </div>
         
-        <!-- 카드 컨테이너 -->
-        <div class="card-container">
-            <!-- 대회 피드 카드 -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">라운딩 피드</h2>
-                    <a href="#" class="more-link">더 보기 &gt;</a>
-                </div>
-                
-                <div class="tab-menu feed-tab-menu">
-                    <div class="tab active">뉴스</div>
-                   
-                </div>
-                
-                <div class="feed-image-container">
-                    <img src="images/stonegate.jpg" alt="골프 선수" class="feed-image">
-                    <div class="feed-title-overlay">
-                        "거리충" 조영복 반전의 우승.. 잔디짬밥 무시못해..
-                    </div>
-                </div>
-                
-                <div class="feed-list">
-                    <div class="feed-item">"훈수충" 김종혁 여전히 선두권 지켜.. 정상에서 내려올 생각없어</div>
-                    <div class="feed-item">"아갈현" "훈수충" 제주도 전지훈련 참석</div>
-                    <div class="feed-item">"아갈현" 김상현 양산 라운딩 반전 우승과 갈비뻐 맞바꿔..</div>
-                    <div class="feed-item"> 허세충들 양산cc 캐디한테 4:1로 멘탈공격 당해..</div>
-                </div>
-            </div>
+        <div class="form-section">
+            <h2 class="form-title">회원 인증</h2>
+            <p class="form-subtitle">HBL 골프 클럽 회원만 접근 가능합니다</p>
             
-            <!-- 대회 정보 카드 -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">라운딩 정보</h2>
-                    <a href="#" class="more-link">더 보기 &gt;</a>
+            <form id="passwordForm">
+                <div class="password-input-container">
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        class="password-input" 
+                        placeholder="비밀번호를 입력하세요"
+                        autocomplete="off"
+                        maxlength="20"
+                    >
                 </div>
                 
-                <div class="info-buttons">
-                    <div class="info-button">
-                        <div class="info-button-title">참가자</div>
-                        <div class="info-button-value">4명</div>
-                        <div class="circle-icon">+</div>
+                <button type="submit" class="login-button" id="loginButton">
+                    <span class="button-text">🏌️ 클럽 입장하기</span>
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
                     </div>
-                    <div class="info-button">
-                        <div class="info-button-title">조편성</div>
-                        <div class="info-button-value">4명</div>
-                        <div class="circle-icon">+</div>
-                    </div>
-                    <div class="info-button">
-                        <div class="info-button-title">역대기록</div>
-                        <div class="info-button-value"></div>
-                        <div class="circle-icon">+</div>
-                    </div>
-                    <div class="info-button ticket-button">
-                        <div class="info-button-title">운전 차량</div>
-                        <div class="circle-icon">→</div>
-                    </div>
-                </div>
+                </button>
                 
-                <div class="tournament-info">
-                    <div class="info-row">
-                        <div class="info-icon">📅</div>
-                        <div class="info-label">라운딩 일정</div>
-                        <div>2025. 06. 06 (금) 아침 7시시</div>
-                    </div>
-                    
-                    <div class="info-row">
-                        <div class="info-icon">🏌️</div>
-                        <div class="info-label">라운딩 장소</div>
-                        
-                        <div>스톤게이트CC</div>
-                    </div>
-                    
-                  
+                <div class="error-message" id="errorMessage">
+                    ❌ 비밀번호가 올바르지 않습니다. 다시 시도해주세요.
                 </div>
-            </div>
-            
-            <!-- 이주의 랭킹 카드 -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">이주의 랭킹</h2>
-                    <a href="#" class="more-link">더 보기 &gt;</a>
-                </div>
-                
-                <div class="tab-menu ranking-tab-menu">
-                    <div class="tab active">랭킹</div>
-                </div>
-                
-                <div class="ranking-container">
-                <div class="top-player first-rank">
-                    <div class="rank-number">1</div>
-                    <img src="images/jay.png" alt="김종혁" class="player-photo">
-                    <div class="player-name"><a href="player-profile-page.html" style="color: white; text-decoration: none;">김종혁</a></div>
-                    <div class="player-score">99타</div>
-                </div>
-
-                <div class="top-player">
-                    <div class="rank-number">2</div>
-                    <img src="images/suk.PNG" alt="정인석" class="player-photo">
-                    <div class="player-name"><a href="player-profile-page-suk.html" style="color: white; text-decoration: none;">정인석</a></div>
-                    <div class="player-score">108타</div>
-                </div>
-                
-                <div class="top-player">
-                    <div class="rank-number">3</div>
-                    <img src="images/sang.jpg" alt="김상현" class="player-photo">
-                    <div class="player-name"><a href="player-profile-page-sang.html" style="color: white; text-decoration: none;">김상현</a></div>
-                    <div class="player-score">112타</div>
-                </div>
-                 <div class="top-player">
-                    <div class="rank-number">4</div>
-                    <img src="images/bok2.jpg" alt="조영복" class="player-photo">
-                    <div class="player-name"><a href="player-profile-page-bok.html" style="color: white; text-decoration: none;">조영복</a></div>
-                    <div class="player-score">119타</div>
-                </div>
-                </div>
-            </div>
+            </form>
+        </div>
+        
+        <div class="footer-info">
+            <p>© 2025 HBL Golf Club. All rights reserved.</p>
+            <p>회원 문의: 010-5118-3496</p>
         </div>
     </div>
     
     <script>
-        // 모바일 메뉴 토글 기능
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
+        const correctPassword = 'hblgolf9999';
         
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const passwordInput = document.getElementById('passwordInput');
+            const loginButton = document.getElementById('loginButton');
+            const errorMessage = document.getElementById('errorMessage');
+            const enteredPassword = passwordInput.value.trim();
+            
+            // 로딩 상태 시작
+            loginButton.classList.add('loading');
+            errorMessage.style.display = 'none';
+            passwordInput.disabled = true;
+            
+            // 실제 서비스에서는 서버 검증을 권장하지만, 
+            // 정적 사이트이므로 클라이언트 측에서 처리
+            setTimeout(() => {
+                if (enteredPassword === correctPassword) {
+                    // 성공 시 메인 페이지로 이동
+                    // 세션 스토리지에 인증 정보 저장 (보안상 실제 서비스에서는 권장하지 않음)
+                    sessionStorage.setItem('hbl_authenticated', 'true');
+                    sessionStorage.setItem('hbl_auth_time', Date.now().toString());
+                    
+                    // 성공 메시지 표시 후 이동
+                    loginButton.querySelector('.button-text').textContent = '✅ 인증 성공!';
+                    loginButton.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'main.html';
+                    }, 800);
+                } else {
+                    // 실패 시 에러 메시지 표시
+                    loginButton.classList.remove('loading');
+                    errorMessage.style.display = 'block';
+                    passwordInput.disabled = false;
+                    passwordInput.focus();
+                    passwordInput.select();
+                    
+                    // 입력 필드 흔들기 효과
+                    passwordInput.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        passwordInput.style.animation = '';
+                    }, 500);
+                }
+            }, 1000); // 1초 지연으로 로딩 효과
         });
         
-        // 현재 활성화된 메뉴 표시
-        const navLinks = document.querySelectorAll('.nav-menu a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                navLinks.forEach(item => item.classList.remove('active'));
-                this.classList.add('active');
-            });
+        // 입력 필드에 포커스
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('passwordInput').focus();
         });
         
-        // 탭 메뉴 기능
-        const feedTabs = document.querySelectorAll('.feed-tab-menu .tab');
-        feedTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                feedTabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
+        // 이미 인증된 사용자는 바로 메인 페이지로 이동
+        // (세션이 유효한 경우 - 1시간)
+        const authTime = sessionStorage.getItem('hbl_auth_time');
+        const isAuthenticated = sessionStorage.getItem('hbl_authenticated');
+        const currentTime = Date.now();
+        const oneHour = 60 * 60 * 1000; // 1시간
+        
+        if (isAuthenticated === 'true' && authTime && (currentTime - parseInt(authTime)) < oneHour) {
+            window.location.href = 'main.html';
+        }
+        
+        // 에러 메시지 클릭 시 숨기기
+        document.getElementById('errorMessage').addEventListener('click', function() {
+            this.style.display = 'none';
         });
         
-        const rankingTabs = document.querySelectorAll('.ranking-tab-menu .tab');
-        rankingTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                rankingTabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
+        // Enter 키로도 제출 가능
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('passwordForm').dispatchEvent(new Event('submit'));
+            }
         });
     </script>
 </body>
