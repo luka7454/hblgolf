@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBL 골프 클럽 - 김종혁 선수 프로필</title>
+    <title id="page-title">HBL 골프 클럽 - 선수 프로필</title>
     <style>
         * {
             margin: 0;
@@ -96,6 +96,26 @@
         .main-content {
             margin-top: 85px;
             padding-bottom: 50px;
+        }
+        
+        /* 로딩 스타일 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px 0;
         }
         
         /* 선수 헤더 스타일 */
@@ -331,18 +351,20 @@
         
         .rank-1 {
             background-color: #ffd700;
+            color: #333;
         }
         
         .rank-2 {
             background-color: #c0c0c0;
+            color: #333;
         }
         
         .rank-3 {
             background-color: #cd7f32;
         }
         
-        .rank-top10 {
-            background-color: #3498db;
+        .rank-4 {
+            background-color: #e74c3c;
         }
         
         /* 선수 소개 탭 스타일 */
@@ -451,27 +473,6 @@
             width: 100%;
             aspect-ratio: 1;
             object-fit: cover;
-        }
-        
-        .media-video {
-            position: relative;
-        }
-        
-        .media-video::after {
-            content: '▶';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            font-size: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .media-title {
@@ -599,355 +600,512 @@
     </header>
     
     <div class="main-content">
-        <div class="container">
-            <!-- 선수 프로필 헤더 -->
-            <div class="player-header">
-                <div class="player-cover">
-                    <div class="player-avatar-container">
-                        <img src="images/jay.png" alt="김종혁" class="player-avatar">
-                    </div>
-                </div>
-                
-                <div class="player-info">
-                    <h1 class="player-name">김종혁</h1>
-                    <div class="player-eng-name">Kim Jay</div>
-                    
-                    <div class="player-details">
-                        <div class="player-detail-item">
-                            <span class="detail-label">국적:</span>
-                            <span class="detail-value">미국</span>
-                        </div>
-                        
-                        <div class="player-detail-item">
-                            <span class="detail-label">생년월일:</span>
-                            <span class="detail-value">1990.11.30</span>
-                        </div>
-                        
-                        <div class="player-detail-item">
-                            <span class="detail-label">신장/체중:</span>
-                            <span class="detail-value">170cm / 77kg</span>
-                        </div>
-                        
-                        <div class="player-detail-item">
-                            <span class="detail-label">회원구분:</span>
-                            <span class="detail-value">정회원</span>
-                        </div>
-                        
-                        <div class="player-detail-item">
-                            <span class="detail-label">입회년도:</span>
-                            <span class="detail-value">2022년</span>
-                        </div>
-
-                          <div class="player-detail-item">
-                            <span class="detail-label">정치성향:</span>
-                            <span class="detail-value">Donald Trump</span>
-                        </div>
-                    </div>
-                    
-                    <div class="player-social">
-                        <a href="#" class="social-icon">📱</a>
-                        <a href="#" class="social-icon">📷</a>
-                        <a href="#" class="social-icon">🌐</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 탭 네비게이션 -->
-            <div class="tab-navigation">
-                <div class="tab-button active" data-tab="records">주요 기록</div>
-                <div class="tab-button" data-tab="profile">선수 소개</div>
-                <div class="tab-button" data-tab="media">미디어</div>
-            </div>
-            
-            <!-- 주요 기록 탭 -->
-            <div class="tab-content active" id="records">
-                <div class="stats-section">
-                    <h2 class="section-title">2025 시즌 기록</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-title">평균 타수</div>
-                            <div class="stat-value">99</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-title">최저 타수</div>
-                            <div class="stat-value">86</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-title">우승</div>
-                            <div class="stat-value">2</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-title">TOP 3</div>
-                            <div class="stat-value">3</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-title">페어웨이 안착률</div>
-                            <div class="stat-value">양호</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-title">그린 적중률</div>
-                            <div class="stat-value">양호</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-title">평균 퍼팅 수</div>
-                            <div class="stat-value">1.8</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-title">평균 드라이브 거리</div>
-                            <div class="stat-value">230m</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="stats-section">
-                    <h2 class="section-title">대회 기록</h2>
-                    <table class="records-table">
-                        <thead>
-                            <tr>
-                                <th>대회일자</th>
-                                <th>대회명</th>
-                                <th>순위</th>
-                                <th>스코어</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                               <tr>
-                                <td class="tournament-date">2025.06.06</td>
-                                <td class="tournament-name">스톤게이트CC</td>
-                                <td>
-                                    <span>2위</span>
-                                    <span class="rank-badge rank-2">2등</span>
-                                </td>
-                                <td class="score">99</td>
-                            </tr>
-
-                            <tr>
-                                <td class="tournament-date">2025.05.11</td>
-                                <td class="tournament-name">밀양 에스파크 라운딩</td>
-                                <td>
-                                    <span>1위</span>
-                                    <span class="rank-badge rank-1">우승</span>
-                                </td>
-                                <td class="score">86</td>
-                            </tr>
-                            
-                            <tr>
-                                <td class="tournament-date">2025.04.04</td>
-                                <td class="tournament-name">아라미르CC 라운딩</td>
-                                <td>
-                                    <span>1위</span>
-                                    <span class="rank-badge rank-1">우승</span>
-                                </td>
-                                <td class="score">100</td>
-                            </tr>
-                            
-                            <tr>
-                                <td class="tournament-date">2025.03.19</td>
-                                <td class="tournament-name">양산cc 라운딩</td>
-                                <td>
-                                    <span>2위</span>
-                                    <span class="rank-badge rank-2">준우승</span>
-                                </td>
-                                <td class="score">111</td>
-                            </tr>
-                            
-                           
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- 선수 소개 탭 -->
-            <div class="tab-content" id="profile">
-                <div class="profile-section">
-                    <h2 class="section-title">선수 소개</h2>
-                    <p class="profile-text">
-                        김종혁 선수는 HBL 골프 클럽의 간판 선수로, 온몸 쥐어짜내기 드라이버 샷과 정확한 아이언 플레이가 장점인 골퍼입니다. 2022년부터 골프를 시작하여 꾸준히 좋은 플레이를 하고 있으며, 특히 2025년 시즌에는 3번의 우승을 기록하며 리더보드 상위권을 유지하고 있습니다.
-                    </p>
-                    <p class="profile-text">
-                        골린이 시절부터 드라이버는 기복이 무지 심하지만 안정적인 아이언 플레이로 주목받았으며, 현재는 'HBL의 훈수충'이라는 별명으로 불리며 팀 내에서 기술적 조언자 역할도 수행하고 있습니다. 파나 버디를 하면 짝다리를 하고 훈수하는게 특징입니다.
-                    </p>
-                </div>
-                
-                <div class="profile-section">
-                    <h2 class="section-title">주요 경력</h2>
-                    <ul class="career-list">
-                        <li class="career-item">
-                            <div class="career-year">2025</div>
-                            <div class="career-desc">밀양 에스파크 라운딩 우승, 제주 라온GC 전지훈련 준우승</div>
-                        </li>
-                        <li class="career-item">
-                            <div class="career-year">2024</div>
-                            <div class="career-desc">동래 베네스트 라운딩 우승, 통도 파인이스트 라운딩 우승</div>
-                        </li>
-                        <li class="career-item">
-                            <div class="career-year">2023</div>
-                            <div class="career-desc">HBL 골프 클럽 정회원 입회, 회원 첫 해 MVP 수상</div>
-                        </li>
-                        <li class="career-item">
-                            <div class="career-year">2022</div>
-                            <div class="career-desc">아마추어 대회 3회 우승, 지역 골프 동호회 랭킹 1위</div>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="profile-section">
-                    <h2 class="section-title">장비 정보</h2>
-                    <div class="equipment-list">
-                        <div class="equipment-item">
-                            <div class="equipment-type">드라이버</div>
-                            <div class="equipment-name">캘러웨이 로그 9° S 50g</div>
-                        </div>
-                        
-                        <div class="equipment-item">
-                            <div class="equipment-type">우드</div>
-                            <div class="equipment-name">핑 430 3번(15°)</div>
-                        </div>
-                        
-                        <div class="equipment-item">
-                            <div class="equipment-type">유틸리티</div>
-                            <div class="equipment-name">핑 430 4번(22°)</div>
-                        </div>
-                        
-                        <div class="equipment-item">
-                            <div class="equipment-type">아이언</div>
-                            <div class="equipment-name">테일러메이드 P7MB (4-PW)</div>
-                        </div>
-                        
-                        <div class="equipment-item">
-                            <div class="equipment-type">웨지</div>
-                            <div class="equipment-name">타이틀리스트 보키 SM10 (50°, 54°, 58°)</div>
-                        </div>
-                        
-                        <div class="equipment-item">
-                            <div class="equipment-type">퍼터</div>
-                            <div class="equipment-name">오디세이 투볼 퍼터</div>
-                        </div>
-                        
-                        <div class="equipment-item">
-                            <div class="equipment-type">볼</div>
-                            <div class="equipment-name">커크랜드 3피스</div>
-                        </div>
-                        
-                        <div class="equipment-item">
-                            <div class="equipment-type">글러브</div>
-                            <div class="equipment-name">캘러웨이 장갑만 씀</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 미디어 탭 -->
-            <div class="tab-content" id="media">
-                <div class="media-section">
-                    <div class="media-tabs">
-                        <div class="media-tab active" data-media="photos">사진</div>
-                        <div class="media-tab" data-media="videos">동영상</div>
-                    </div>
-                    
-                    <div class="media-grid">
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">밀양 에스파크 우승 장면</div>
-                            <div class="media-date">2025.05.11</div>
-                        </div>
-                        
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">드라이버 스윙 모습</div>
-                            <div class="media-date">2025.04.22</div>
-                        </div>
-                        
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">제주 전지훈련 그린 어프로치</div>
-                            <div class="media-date">2025.03.23</div>
-                        </div>
-                        
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">양산CC 티샷 장면</div>
-                            <div class="media-date">2025.04.15</div>
-                        </div>
-                        
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">동래 베네스트 우승 세리머니</div>
-                            <div class="media-date">2025.02.18</div>
-                        </div>
-                        
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">통도 파인이스트 라운딩 모습</div>
-                            <div class="media-date">2025.01.20</div>
-                        </div>
-                        
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">HBL 멤버들과 단체 사진</div>
-                            <div class="media-date">2025.03.01</div>
-                        </div>
-                        
-                        <div class="media-item">
-                            <img src="/api/placeholder/250/250" alt="김종혁 선수" class="media-img">
-                            <div class="media-title">연습장 훈련 모습</div>
-                            <div class="media-date">2025.02.05</div>
-                        </div>
-                    </div>
-                    
-                    <a href="#" class="view-more">더 보기</a>
-                </div>
-            </div>
+        <div class="container" id="main-container">
+            <div class="loading">선수 정보를 불러오는 중...</div>
         </div>
     </div>
     
     <script>
-        // 모바일 메뉴 토글 기능
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
+        const API_BASE_URL = 'https://port-0-hblgolfbakend-mb4ipg5fd735a020.sel4.cloudtype.app';
+        let currentPlayer = null;
+        let playerRecords = [];
         
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            const playerId = getPlayerIdFromUrl();
+            if (playerId) {
+                loadPlayerProfile(playerId);
+            } else {
+                showError('선수 ID가 지정되지 않았습니다.');
+            }
+            setupEventListeners();
         });
         
-        // 탭 메뉴 기능
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
+        // URL에서 선수 ID 추출 (파일명 기반)
+        function getPlayerIdFromUrl() {
+            const pathname = window.location.pathname;
+            const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+            
+            // 파일명에 따른 선수 ID 매핑
+            const playerMapping = {
+                'player-profile-page.html': 1,      // 김종혁
+                'player-profile-page-suk.html': 2,  // 정인석
+                'player-profile-page-sang.html': 3, // 김상현
+                'player-profile-page-bok.html': 4   // 조영복
+            };
+            
+            return playerMapping[filename] || 1; // 기본값은 김종혁
+        }
         
-        tabButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // 탭 버튼 활성화
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 모바일 메뉴 토글
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            menuToggle?.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        }
+        
+        // 선수 프로필 로드
+        async function loadPlayerProfile(playerId) {
+            try {
+                // 선수 기본 정보 로드
+                const playerResponse = await fetch(`${API_BASE_URL}/api/players/${playerId}`);
+                if (!playerResponse.ok) {
+                    throw new Error('선수 정보를 불러올 수 없습니다.');
+                }
                 
-                // 탭 콘텐츠 전환
-                const tabId = this.getAttribute('data-tab');
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
+                currentPlayer = await playerResponse.json();
+                
+                // 선수별 스코어 기록 로드
+                await loadPlayerRecords(playerId);
+                
+                // 페이지 렌더링
+                renderPlayerProfile();
+                
+            } catch (error) {
+                console.error('선수 프로필 로드 오류:', error);
+                showError('선수 정보를 불러오는데 실패했습니다.');
+            }
+        }
+        
+        // 선수별 스코어 기록 로드
+        async function loadPlayerRecords(playerId) {
+            try {
+                // 모든 라운딩 가져오기
+                const roundsResponse = await fetch(`${API_BASE_URL}/api/rounds`);
+                const rounds = await roundsResponse.json();
+                
+                playerRecords = [];
+                
+                // 각 라운딩의 스코어 가져오기
+                for (const round of rounds) {
+                    try {
+                        const scoresResponse = await fetch(`${API_BASE_URL}/api/rounds/${round.id}/scores`);
+                        const scores = await scoresResponse.json();
+                        
+                        // 현재 선수의 스코어 찾기
+                        const playerScore = scores.find(score => score.player_id == playerId);
+                        if (playerScore) {
+                            playerRecords.push({
+                                ...playerScore,
+                                round_name: round.round_name,
+                                round_date: round.round_date,
+                                course_name: round.course_name || '미지정'
+                            });
+                        }
+                    } catch (error) {
+                        console.error(`라운딩 ${round.id} 스코어 로드 오류:`, error);
+                    }
+                }
+                
+                // 날짜순 정렬 (최신순)
+                playerRecords.sort((a, b) => new Date(b.round_date) - new Date(a.round_date));
+                
+            } catch (error) {
+                console.error('선수 기록 로드 오류:', error);
+            }
+        }
+        
+        // 선수 프로필 렌더링
+        function renderPlayerProfile() {
+            const container = document.getElementById('main-container');
+            
+            // 타이틀 업데이트
+            document.getElementById('page-title').textContent = `HBL 골프 클럽 - ${currentPlayer.name} 선수 프로필`;
+            
+            container.innerHTML = `
+                <!-- 선수 프로필 헤더 -->
+                <div class="player-header">
+                    <div class="player-cover">
+                        <div class="player-avatar-container">
+                            <img src="${currentPlayer.photo_url || '/api/placeholder/110/110'}" alt="${currentPlayer.name}" class="player-avatar">
+                        </div>
+                    </div>
+                    
+                    <div class="player-info">
+                        <h1 class="player-name">${currentPlayer.name}</h1>
+                        <div class="player-eng-name">${currentPlayer.eng_name || ''}</div>
+                        
+                        <div class="player-details">
+                            <div class="player-detail-item">
+                                <span class="detail-label">국적:</span>
+                                <span class="detail-value">${currentPlayer.nationality || '한국'}</span>
+                            </div>
+                            
+                            <div class="player-detail-item">
+                                <span class="detail-label">생년월일:</span>
+                                <span class="detail-value">${formatBirthDate(currentPlayer.birth_date)}</span>
+                            </div>
+                            
+                            <div class="player-detail-item">
+                                <span class="detail-label">신장/체중:</span>
+                                <span class="detail-value">${currentPlayer.height || 'N/A'}cm / ${currentPlayer.weight || 'N/A'}kg</span>
+                            </div>
+                            
+                            <div class="player-detail-item">
+                                <span class="detail-label">회원구분:</span>
+                                <span class="detail-value">${currentPlayer.membership_type || 'HBL 정회원'}</span>
+                            </div>
+                            
+                            <div class="player-detail-item">
+                                <span class="detail-label">입회년도:</span>
+                                <span class="detail-value">${currentPlayer.join_year || 'N/A'}년</span>
+                            </div>
+                            
+                            ${currentPlayer.political_view ? `
+                            <div class="player-detail-item">
+                                <span class="detail-label">정치성향:</span>
+                                <span class="detail-value">${currentPlayer.political_view}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="player-social">
+                            <a href="#" class="social-icon">📱</a>
+                            <a href="#" class="social-icon">📷</a>
+                            <a href="#" class="social-icon">🌐</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 탭 네비게이션 -->
+                <div class="tab-navigation">
+                    <div class="tab-button active" data-tab="records">주요 기록</div>
+                    <div class="tab-button" data-tab="profile">선수 소개</div>
+                    <div class="tab-button" data-tab="media">미디어</div>
+                </div>
+                
+                <!-- 주요 기록 탭 -->
+                <div class="tab-content active" id="records">
+                    <div class="stats-section">
+                        <h2 class="section-title">2025 시즌 기록</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-title">평균 타수</div>
+                                <div class="stat-value">${calculateAverageScore()}</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-title">최저 타수</div>
+                                <div class="stat-value">${currentPlayer.best_score || 'N/A'}</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-title">우승</div>
+                                <div class="stat-value">${currentPlayer.wins || 0}</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-title">TOP 3</div>
+                                <div class="stat-value">${currentPlayer.top3 || 0}</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-title">페어웨이 안착률</div>
+                                <div class="stat-value">${getFairwayHitRate()}</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-title">그린 적중률</div>
+                                <div class="stat-value">${getGreenHitRate()}</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-title">평균 퍼팅 수</div>
+                                <div class="stat-value">${getAveragePutts()}</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-title">평균 드라이브 거리</div>
+                                <div class="stat-value">${getAverageDriveDistance()}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-section">
+                        <h2 class="section-title">대회 기록</h2>
+                        <table class="records-table">
+                            <thead>
+                                <tr>
+                                    <th>대회일자</th>
+                                    <th>대회명</th>
+                                    <th>순위</th>
+                                    <th>스코어</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generateRecordsTable()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 선수 소개 탭 -->
+                <div class="tab-content" id="profile">
+                    <div class="profile-section">
+                        <h2 class="section-title">선수 소개</h2>
+                        <p class="profile-text">
+                            ${getPlayerDescription()}
+                        </p>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h2 class="section-title">주요 경력</h2>
+                        <ul class="career-list">
+                            ${generateCareerList()}
+                        </ul>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h2 class="section-title">장비 정보</h2>
+                        <div class="equipment-list">
+                            ${generateEquipmentList()}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 미디어 탭 -->
+                <div class="tab-content" id="media">
+                    <div class="media-section">
+                        <div class="media-tabs">
+                            <div class="media-tab active" data-media="photos">사진</div>
+                            <div class="media-tab" data-media="videos">동영상</div>
+                        </div>
+                        
+                        <div class="media-grid">
+                            <div class="media-item">
+                                <img src="/api/placeholder/250/250" alt="${currentPlayer.name} 선수" class="media-img">
+                                <div class="media-title">최근 라운딩 모습</div>
+                                <div class="media-date">2025.06.06</div>
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="view-more">더 보기</a>
+                    </div>
+                </div>
+            `;
+            
+            setupTabNavigation();
+        }
+        
+        // 탭 네비게이션 설정
+        function setupTabNavigation() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 탭 버튼 활성화
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 탭 콘텐츠 전환
+                    const tabId = this.getAttribute('data-tab');
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
                 });
-                document.getElementById(tabId).classList.add('active');
             });
-        });
+            
+            // 미디어 탭 기능
+            const mediaTabs = document.querySelectorAll('.media-tab');
+            mediaTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    mediaTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
         
-        // 미디어 탭 기능
-        const mediaTabs = document.querySelectorAll('.media-tab');
+        // 유틸리티 함수들
         
-        mediaTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                mediaTabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
+        // 평균 스코어 계산
+        function calculateAverageScore() {
+            if (playerRecords.length === 0) return 'N/A';
+            const totalScore = playerRecords.reduce((sum, record) => sum + record.total_score, 0);
+            return Math.round(totalScore / playerRecords.length);
+        }
+        
+        // 페어웨이 안착률 (임시값)
+        function getFairwayHitRate() {
+            const rates = {
+                1: '양호',      // 김종혁
+                2: '양호',      // 정인석  
+                3: '아주가끔',   // 김상현
+                4: '진짜 아주 가끔' // 조영복
+            };
+            return rates[currentPlayer.id] || '보통';
+        }
+        
+        // 그린 적중률 (임시값)
+        function getGreenHitRate() {
+            const rates = {
+                1: '양호',        // 김종혁
+                2: '조금 양호',    // 정인석
+                3: '아아주가끔',   // 김상현  
+                4: '0%'          // 조영복
+            };
+            return rates[currentPlayer.id] || '보통';
+        }
+        
+        // 평균 퍼팅 수 (임시값)
+        function getAveragePutts() {
+            const putts = {
+                1: '1.8',    // 김종혁
+                2: '1.8',    // 정인석
+                3: '2.0',    // 김상현
+                4: '2.5'     // 조영복
+            };
+            return putts[currentPlayer.id] || '2.0';
+        }
+        
+        // 평균 드라이브 거리 (임시값)
+        function getAverageDriveDistance() {
+            const distances = {
+                1: '230m',   // 김종혁
+                2: '150m',   // 정인석
+                3: '150m',   // 김상현  
+                4: '280m'    // 조영복
+            };
+            return distances[currentPlayer.id] || '200m';
+        }
+        
+        // 기록 테이블 생성
+        function generateRecordsTable() {
+            if (playerRecords.length === 0) {
+                return '<tr><td colspan="4">기록이 없습니다.</td></tr>';
+            }
+            
+            return playerRecords.map(record => {
+                const rankBadgeClass = `rank-${record.ranking}`;
+                const rankText = record.ranking === 1 ? '우승' : 
+                               record.ranking === 2 ? '준우승' : 
+                               record.ranking === 3 ? '3등' : '꼴등';
                 
-                // 여기에 실제 미디어 필터링 로직 추가
-            });
-        });
+                return `
+                    <tr>
+                        <td class="tournament-date">${formatDate(record.round_date)}</td>
+                        <td class="tournament-name">${record.round_name}</td>
+                        <td>
+                            <span>${record.ranking}위</span>
+                            <span class="rank-badge ${rankBadgeClass}">${rankText}</span>
+                        </td>
+                        <td class="score">${record.total_score}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // 선수 설명 생성
+        function getPlayerDescription() {
+            const descriptions = {
+                1: `김종혁 선수는 HBL 골프 클럽의 간판 선수로, 온몸 쥐어짜내기 드라이버 샷과 정확한 아이언 플레이가 장점인 골퍼입니다. 2022년부터 골프를 시작하여 꾸준히 좋은 플레이를 하고 있으며, 특히 2025년 시즌에는 우승을 기록하며 리더보드 상위권을 유지하고 있습니다. 골린이 시절부터 드라이버는 기복이 무지 심하지만 안정적인 아이언 플레이로 주목받았으며, 현재는 'HBL의 훈수충'이라는 별명으로 불리며 팀 내에서 기술적 조언자 역할도 수행하고 있습니다. 파나 버디를 하면 짝다리를 하고 훈수하는게 특징입니다.`,
+                2: `명실상부 HBL 재력가, 아들딸부자입니다. 오늘 잘되는데? 오늘 감좋은데? 를 연발하지만 딱히 좋았던 적은 없었습니다. 레슨을 받고 있어서 미래가 기대되나 아직은 효과가 없는듯 합니다. 둘째가 곧 태어나므로 어쨋든 승자입니다.`,
+                3: `매 라운드마다 티샷 하기 전, 김상현 선수의 입에서 빠지지 않는 삼단 콤보 멘트: "아, 갈비만 괜찮으면…" → "아, 갈비 또 아프네~" → "아, 갈비 어떡하노~" → "아, 갈비 안아파봤으면 아가리해라" 필드 위의 '갈비 예보관' 맑음: 첫 티샷 전 "아, 갈비만 괜찮으면…!" 흐림: 후반 홀 "아, 또 아프다니까!" 우박: 최종 라운드 "아, 갈비 또아프네.. 안아파봤으면 아가리해라?" 아갈현의 다음 갈비 예보도 기대 부탁 ^^!`,
+                4: `비거리충, 원온충의 표본이다. 페어웨이 안착률 ~1% 기록중이지만 앞팀이 그린에있으면 그냥 싫은가보다. 캐디님 몇미터에요? 캐디님 저 나중에 칠게요. 캐디님 지금 쳐도됩니까? , 아 맞을꺼같은데. 하지만 운동선수 출신으로 선수들중 가장 미래가 밝다.`
+            };
+            
+            return descriptions[currentPlayer.id] || '열정적인 골퍼입니다.';
+        }
+        
+        // 경력 리스트 생성
+        function generateCareerList() {
+            const wins = playerRecords.filter(record => record.ranking === 1);
+            if (wins.length === 0) {
+                return '<li class="career-item"><div class="career-year">2025</div><div class="career-desc">HBL 골프 클럽 활동</div></li>';
+            }
+            
+            return wins.map(win => `
+                <li class="career-item">
+                    <div class="career-year">${new Date(win.round_date).getFullYear()}</div>
+                    <div class="career-desc">${win.round_name} 우승</div>
+                </li>
+            `).join('');
+        }
+        
+        // 장비 리스트 생성 (각 선수별 하드코딩)
+        function generateEquipmentList() {
+            const equipments = {
+                1: [ // 김종혁
+                    { type: '드라이버', name: '캘러웨이 로그 9° S 50g' },
+                    { type: '우드', name: '핑 430 3번(15°)' },
+                    { type: '유틸리티', name: '핑 430 4번(22°)' },
+                    { type: '아이언', name: '테일러메이드 P7MB (4-PW)' },
+                    { type: '웨지', name: '타이틀리스트 보키 SM10 (50°, 54°, 58°)' },
+                    { type: '퍼터', name: '오디세이 투볼 퍼터' },
+                    { type: '볼', name: '커크랜드 3피스' },
+                    { type: '글러브', name: '캘러웨이 장갑만 씀' }
+                ],
+                2: [ // 정인석
+                    { type: '드라이버', name: '캘러웨이 엘리트 9° S' },
+                    { type: '우드', name: '캘러웨이 3번(15°)' },
+                    { type: '유틸리티', name: '캘러웨이 4번(22°)' },
+                    { type: '아이언', name: '브릿지스톤 v300 (5-PW)' },
+                    { type: '웨지', name: '브릿지스톤 v300 (5-PW)' },
+                    { type: '퍼터', name: '오딧세이' },
+                    { type: '볼', name: '테일러메이드 tpx5' },
+                    { type: '글러브', name: '모름' }
+                ],
+                3: [ // 김상현
+                    { type: '드라이버', name: '핑 G440 9°, 캘러웨이 빅버사' },
+                    { type: '우드', name: '타이틀리스트 3번(15°), 캘러웨이 5번' },
+                    { type: '유틸리티', name: '데이비드 7번(22°), 캘러웨이 빅버사 3번' },
+                    { type: '아이언', name: '미즈노 JPX (5-PW)' },
+                    { type: '웨지', name: '미즈노 JPX S P' },
+                    { type: '퍼터', name: '아버지한테 받은 블레이드 퍼터' },
+                    { type: '볼', name: '로스트볼(타이틀리스트 Pro v1)' },
+                    { type: '글러브', name: '랜덤' }
+                ],
+                4: [ // 조영복
+                    { type: '드라이버', name: '핑 g425 9° S 60g' },
+                    { type: '우드', name: '핑 g425 3번(15°)' },
+                    { type: '유틸리티', name: '핑 g425 4번(22°)' },
+                    { type: '아이언', name: '테일러메이드 스텔스 (5-PW)' },
+                    { type: '웨지', name: '테일러메이드 스텔스' },
+                    { type: '퍼터', name: '오딧세이 #7' },
+                    { type: '볼', name: '타이틀리스트 Pro v1' },
+                    { type: '글러브', name: '모름' }
+                ]
+            };
+            
+            const playerEquipment = equipments[currentPlayer.id] || [];
+            
+            return playerEquipment.map(equipment => `
+                <div class="equipment-item">
+                    <div class="equipment-type">${equipment.type}</div>
+                    <div class="equipment-name">${equipment.name}</div>
+                </div>
+            `).join('');
+        }
+        
+        // 날짜 포맷팅
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}.${month}.${day}`;
+        }
+        
+        // 생년월일 포맷팅
+        function formatBirthDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}.${month}.${day}`;
+        }
+        
+        // 에러 표시
+        function showError(message) {
+            const container = document.getElementById('main-container');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
     </script>
 </body>
 </html>
