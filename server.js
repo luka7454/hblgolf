@@ -10,7 +10,18 @@ const app = express();
 const PORT = process.env.PORT || 8080; // 클라우드타입은 8080 포트 사용
 
 // 미들웨어 설정
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:3001', 
+        'http://localhost:8080',
+        'https://web-hblgolf-mb4ipg5fd735a020.sel4.cloudtype.app', // 👈 새 프론트엔드 도메인 추가
+        process.env.FRONTEND_URL || 'https://your-frontend-domain.com'
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.static('public')); // 정적 파일 서빙
 
