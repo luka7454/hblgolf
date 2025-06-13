@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBL 골프 클럽 - 관리자 페이지</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background-color: #1a75cf;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .admin-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background-color: white;
+            border: 2px solid #1a75cf;
+            color: #1a75cf;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background-color: #1a75cf;
+            color: white;
+        }
+        
+        .admin-section {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1a75cf;
+            border-bottom: 2px solid #1a75cf;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .btn {
+            background-color: #1a75cf;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #155bb5;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .player-score-entry {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .player-score-entry h4 {
+            margin-bottom: 10px;
+            color: #1a75cf;
+        }
+        
+        .score-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background-color: #1a75cf;
+            color: white;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-inputs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .admin-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                margin: 5px 0;
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏌️‍♂️ HBL 골프 클럽 관리자 페이지</h1>
+        <p>라운딩 기록을 쉽게 관리하세요</p>
+    </div>
+    
+    <div class="container">
+        <div class="admin-nav">
+            <button class="nav-btn active" onclick="showSection('add-round')">새 라운딩 추가</button>
+            <button class="nav-btn" onclick="showSection('add-scores')">스코어 입력</button>
+            <button class="nav-btn" onclick="showSection('add-course')">골프장 추가</button>
+            <button class="nav-btn" onclick="showSection('add-news')">뉴스 추가</button>
+            <button class="nav-btn" onclick="showSection('view-data')">데이터 조회</button>
+        </div>
+        
+        <!-- 새 라운딩 추가 섹션 -->
+        <div id="add-round" class="admin-section active">
+            <h2 class="section-title">새 라운딩 추가</h2>
+            
+            <div class="alert alert-success" id="round-success-alert"></div>
+            <div class="alert alert-error" id="round-error-alert"></div>
+            
+            <form id="round-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="round-name">라운딩명</label>
+                        <input type="text" id="round-name" name="round_name" placeholder="예: 스톤게이트CC 라운딩" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="round-date">라운딩 날짜</label>
+                        <input type="date" id="round-date" name="round_date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course-select">골프장</label>
+                        <select id="course-select" name="course_id" required>
+                            <option value="">골프장을 선택하세요</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tee-time">티오프 시간</label>
+                        <input type="time" id="tee-time" name="tee_time">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="weather">날씨</label>
+                        <select id="weather" name="weather">
+                            <option value="">선택하세요</option>
+                            <option value="맑음">맑음</option>
+                            <option value="흐림">흐림</option>
+                            <option value="비">비</option>
+                            <option value="눈">눈</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="temperature">기온 (°C)</label>
+                        <input type="number" id="temperature" name="temperature" placeholder="24">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wind-condition">바람</label>
+                        <select id="wind-condition" name="wind_condition">
+                            <option value="">선택하세요</option>
+                            <option value="약함">약함</option>
+                            <option value="보통">보통</option>
+                            <option value="강함">강함</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="round-time">라운딩 시간</label>
+                        <input type="text" id="round-time" name="round_time" placeholder="4시간 30분">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prize-money">상금</label>
+                    <input type="text" id="prize-money" name="prize_money" placeholder="1000원빵">
+                </div>
+                
+                <button type="submit" class="btn">라운딩 추가</button>
+            </form>
+        </div>
+        
+        <!-- 스코어 입력 섹션 -->
+        <div id="add-scores" class="admin-section">
+            <h2 class="section-title">스코어 입력</h2>
+            
+            <div class="alert alert-success" id="score-success-alert"></div>
+            <div class="alert alert-error" id="score-error-alert"></div>
+            
+            <div class="form-group">
+                <label for="score-round-select">라운딩 선택</label>
+                <select id="score-round-select" required>
+                    <option value="">라운딩을 선택하세요</option>
+                </select>
+            </div>
+            
+            <div id="player-scores-container">
+                <!-- 선수별 스코어 입력 폼이 동적으로 생성됩니다 -->
+            </div>
+            
+            <button type="button" class="btn" onclick="saveAllScores()">모든 스코어 저장</button>
+        </div>
+        
+        <!-- 골프장 추가 섹션 -->
+        <div id="add-course" class="admin-section">
+            <h2 class="section-title">골프장 추가</h2>
+            
+            <div class="alert alert-success" id="course-success-alert"></div>
+            <div class="alert alert-error" id="course-error-alert"></div>
+            
+            <form id="course-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course-name">골프장명</label>
+                        <input type="text" id="course-name" name="name" placeholder="스톤게이트CC" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course-location">위치</label>
+                        <input type="text" id="course-location" name="location" placeholder="경기도">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course-type">코스 타입</label>
+                        <input type="text" id="course-type" name="course_type" placeholder="18홀">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course-par">파</label>
+                        <input type="number" id="course-par" name="par" placeholder="72">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course-yardage">야드</label>
+                        <input type="number" id="course-yardage" name="yardage" placeholder="6800">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">골프장 추가</button>
+            </form>
+        </div>
+        
+        <!-- 뉴스 추가 섹션 -->
+        <div id="add-news" class="admin-section">
+            <h2 class="section-title">뉴스 추가</h2>
+            
+            <div class="alert alert-success" id="news-success-alert"></div>
+            <div class="alert alert-error" id="news-error-alert"></div>
+            
+            <form id="news-form">
+                <div class="form-group">
+                    <label for="news-title">제목</label>
+                    <input type="text" id="news-title" name="title" placeholder="뉴스 제목을 입력하세요" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="news-content">내용</label>
+                    <textarea id="news-content" name="content" placeholder="뉴스 내용을 입력하세요"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="news-image">이미지 URL</label>
+                        <input type="url" id="news-image" name="image_url" placeholder="https://example.com/image.jpg">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="news-round">관련 라운딩</label>
+                        <select id="news-round" name="round_id">
+                            <option value="">관련 라운딩을 선택하세요 (선택사항)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="news-featured" name="is_featured">
+                        중요 뉴스로 표시
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn">뉴스 추가</button>
+            </form>
+        </div>
+        
+        <!-- 데이터 조회 섹션 -->
+        <div id="view-data" class="admin-section">
+            <h2 class="section-title">데이터 조회</h2>
+            
+            <div class="loading" id="data-loading">데이터를 불러오는 중...</div>
+            
+            <h3>최근 라운딩 기록</h3>
+            <table class="data-table" id="rounds-table">
+                <thead>
+                    <tr>
+                        <th>날짜</th>
+                        <th>라운딩명</th>
+                        <th>골프장</th>
+                        <th>우승자</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 데이터가 동적으로 삽입됩니다 -->
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 30px;">선수 랭킹</h3>
+            <table class="data-table" id="rankings-table">
+                <thead>
+                    <tr>
+                        <th>순위</th>
+                        <th>선수명</th>
+                        <th>평균 스코어</th>
+                        <th>베스트 스코어</th>
+                        <th>우승 횟수</th>
+                        <th>TOP3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 데이터가 동적으로 삽입됩니다 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:3001';
+        
+        // 섹션 전환 함수
+        function showSection(sectionId) {
+            // 모든 섹션 숨기기
+            const sections = document.querySelectorAll('.admin-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // 모든 네비 버튼 비활성화
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            
+            // 선택된 섹션 표시
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            // 섹션별 초기화
+            if (sectionId === 'add-round') {
+                loadCourses();
+            } else if (sectionId === 'add-scores') {
+                loadRoundsForScore();
+            } else if (sectionId === 'add-news') {
+                loadRoundsForNews();
+            } else if (sectionId === 'view-data') {
+                loadAllData();
+            }
+        }
+        
+        // 알림 표시 함수
+        function showAlert(alertId, message, isSuccess = true) {
+            const alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.className = isSuccess ? 'alert alert-success' : 'alert alert-error';
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 골프장 목록 로드
+        async function loadCourses() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/courses`);
+                const courses = await response.json();
+                
+                const select = document.getElementById('course-select');
+                select.innerHTML = '<option value="">골프장을 선택하세요</option>';
+                
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.id;
+                    option.textContent = `${course.name} (${course.location})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('골프장 로드 오류:', error);
+            }
+        }
+        
+        // 스코어 입력용 라운딩 목록 로드
+        async function loadRoundsForScore() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rounds`);
+                const rounds = await response.json();
+                
+                const select = document.getElementById('score-round-select');
+                select.innerHTML = '<option value="">라운딩을 선택하세요</option>';
+                
+                rounds.forEach(round => {
+                    const option = document.createElement('option');
+                    option.value = round.id;
+                    option.textContent = `${round.round_name} (${round.round_date})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('라운딩 로드 오류:', error);
+            }
+        }
+        
+        // 뉴스용 라운딩 목록 로드
+        async function loadRoundsForNews() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rounds`);
+                const rounds = await response.json();
+                
+                const select = document.getElementById('news-round');
+                select.innerHTML = '<option value="">관련 라운딩을 선택하세요 (선택사항)</option>';
+                
+                rounds.forEach(round => {
+                    const option = document.createElement('option');
+                    option.value = round.id;
+                    option.textContent = `${round.round_name} (${round.round_date})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('라운딩 로드 오류:', error);
+            }
+        }
+        
+        // 선수별 스코어 입력 폼 생성
+        async function createPlayerScoreForms(roundId) {
+            try {
+                const playersResponse = await fetch(`${API_BASE_URL}/api/players`);
+                const players = await playersResponse.json();
+                
+                const container = document.getElementById('player-scores-container');
+                container.innerHTML = '';
+                
+                players.forEach((player, index) => {
+                    const playerDiv = document.createElement('div');
+                    playerDiv.className = 'player-score-entry';
+                    playerDiv.innerHTML = `
+                        <h4>${player.name}</h4>
+                        <div class="score-inputs">
+                            <div class="form-group">
+                                <label>총 스코어</label>
+                                <input type="number" name="total_score_${player.id}" placeholder="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>순위</label>
+                                <input type="number" name="ranking_${player.id}" placeholder="${index + 1}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>버디</label>
+                                <input type="number" name="birdie_count_${player.id}" placeholder="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>이글</label>
+                                <input type="number" name="eagle_count_${player.id}" placeholder="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>니어리스트</label>
+                                <input type="number" name="nearest_count_${player.id}" placeholder="0" min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>메모</label>
+                            <textarea name="notes_${player.id}" placeholder="특별한 기록이나 메모"></textarea>
+                        </div>
+                    `;
+                    container.appendChild(playerDiv);
+                });
+            } catch (error) {
+                console.error('선수 목록 로드 오류:', error);
+            }
+        }
+        
+        // 라운딩 선택 시 스코어 폼 생성
+        document.getElementById('score-round-select').addEventListener('change', function() {
+            if (this.value) {
+                createPlayerScoreForms(this.value);
+            } else {
+                document.getElementById('player-scores-container').innerHTML = '';
+            }
+        });
+        
+        // 모든 스코어 저장
+        async function saveAllScores() {
+            const roundId = document.getElementById('score-round-select').value;
+            if (!roundId) {
+                showAlert('score-error-alert', '라운딩을 먼저 선택하세요.', false);
+                return;
+            }
+            
+            try {
+                const playersResponse = await fetch(`${API_BASE_URL}/api/players`);
+                const players = await playersResponse.json();
+                
+                const scores = [];
+                let hasError = false;
+                
+                players.forEach(player => {
+                    const totalScore = document.querySelector(`input[name="total_score_${player.id}"]`);
+                    const ranking = document.querySelector(`input[name="ranking_${player.id}"]`);
+                    
+                    if (totalScore && totalScore.value && ranking && ranking.value) {
+                        scores.push({
+                            round_id: parseInt(roundId),
+                            player_id: player.id,
+                            total_score: parseInt(totalScore.value),
+                            ranking: parseInt(ranking.value),
+                            birdie_count: parseInt(document.querySelector(`input[name="birdie_count_${player.id}"]`).value) || 0,
+                            eagle_count: parseInt(document.querySelector(`input[name="eagle_count_${player.id}"]`).value) || 0,
+                            nearest_count: parseInt(document.querySelector(`input[name="nearest_count_${player.id}"]`).value) || 0,
+                            notes: document.querySelector(`textarea[name="notes_${player.id}"]`).value || ''
+                        });
+                    }
+                });
+                
+                if (scores.length === 0) {
+                    showAlert('score-error-alert', '최소 한 명의 선수 스코어를 입력하세요.', false);
+                    return;
+                }
+                
+                // 모든 스코어 저장
+                for (const score of scores) {
+                    const response = await fetch(`${API_BASE_URL}/api/admin/scores`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(score)
+                    });
+                    
+                    if (!response.ok) {
+                        hasError = true;
+                        break;
+                    }
+                }
+                
+                if (!hasError) {
+                    showAlert('score-success-alert', '모든 스코어가 성공적으로 저장되었습니다!');
+                    document.getElementById('player-scores-container').innerHTML = '';
+                    document.getElementById('score-round-select').value = '';
+                } else {
+                    showAlert('score-error-alert', '스코어 저장 중 오류가 발생했습니다.', false);
+                }
+                
+            } catch (error) {
+                console.error('스코어 저장 오류:', error);
+                showAlert('score-error-alert', '스코어 저장 중 오류가 발생했습니다.', false);
+            }
+        }
+        
+        // 모든 데이터 로드
+        async function loadAllData() {
+            const loading = document.getElementById('data-loading');
+            loading.classList.add('show');
+            
+            try {
+                // 라운딩 데이터 로드
+                const roundsResponse = await fetch(`${API_BASE_URL}/api/rounds`);
+                const rounds = await roundsResponse.json();
+                
+                const roundsTableBody = document.querySelector('#rounds-table tbody');
+                roundsTableBody.innerHTML = '';
+                
+                rounds.forEach(round => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${round.round_date}</td>
+                        <td>${round.round_name}</td>
+                        <td>${round.course_name || '미지정'}</td>
+                        <td>${round.winner_name || '미정'} ${round.winner_score ? `(${round.winner_score}타)` : ''}</td>
+                        <td>${round.status}</td>
+                    `;
+                    roundsTableBody.appendChild(row);
+                });
+                
+                // 랭킹 데이터 로드
+                const rankingsResponse = await fetch(`${API_BASE_URL}/api/rankings`);
+                const rankings = await rankingsResponse.json();
+                
+                const rankingsTableBody = document.querySelector('#rankings-table tbody');
+                rankingsTableBody.innerHTML = '';
+                
+                rankings.forEach((player, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${player.name}</td>
+                        <td>${player.avg_score ? player.avg_score.toFixed(1) : 'N/A'}</td>
+                        <td>${player.best_score || 'N/A'}</td>
+                        <td>${player.wins || 0}</td>
+                        <td>${player.top3 || 0}</td>
+                    `;
+                    rankingsTableBody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+        
+        // 폼 제출 이벤트 처리
+        
+        // 라운딩 추가 폼
+        document.getElementById('round-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/rounds`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert('round-success-alert', result.message);
+                    this.reset();
+                } else {
+                    showAlert('round-error-alert', result.error, false);
+                }
+            } catch (error) {
+                console.error('라운딩 추가 오류:', error);
+                showAlert('round-error-alert', '라운딩 추가 중 오류가 발생했습니다.', false);
+            }
+        });
+        
+        // 골프장 추가 폼
+        document.getElementById('course-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/courses`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert('course-success-alert', result.message);
+                    this.reset();
+                } else {
+                    showAlert('course-error-alert', result.error, false);
+                }
+            } catch (error) {
+                console.error('골프장 추가 오류:', error);
+                showAlert('course-error-alert', '골프장 추가 중 오류가 발생했습니다.', false);
+            }
+        });
+        
+        // 뉴스 추가 폼
+        document.getElementById('news-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            data.is_featured = document.getElementById('news-featured').checked;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/news`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert('news-success-alert', result.message);
+                    this.reset();
+                } else {
+                    showAlert('news-error-alert', result.error, false);
+                }
+            } catch (error) {
+                console.error('뉴스 추가 오류:', error);
+                showAlert('news-error-alert', '뉴스 추가 중 오류가 발생했습니다.', false);
+            }
+        });
+        
+        // 초기 로드
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourses();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBL 골프 클럽</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        body {
+            background-color: #c9e6f0;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-text {
+            font-family: Arial, sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            letter-spacing: -1px;
+            color: #000;
+        }
+        
+        .logo {
+            position: absolute;
+            left: 2rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin-left: 2rem;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover {
+            color: #0a5e2f;
+            border-bottom: 2px solid #0a5e2f;
+        }
+        
+        .active {
+            color: #0a5e2f !important;
+            border-bottom: 2px solid #0a5e2f;
+        }
+        
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            position: absolute;
+            right: 2rem;
+        }
+        
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .content {
+            margin-top: 85px;
+            padding: 20px;
+        }
+        
+        /* 광고 배너 스타일 */
+        .ad-banner {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .banner-img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* 카드 컨테이너 스타일 */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 카드 스타일 */
+        .card {
+            flex: 1;
+            min-width: 320px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            color: #3366cc;
+            font-weight: bold;
+        }
+        
+        .more-link {
+            color: #3366cc;
+            text-decoration: none;
+        }
+        
+        /* 탭 메뉴 스타일 */
+        .tab-menu {
+            display: flex;
+            height: 40px;
+        }
+        
+        .feed-tab-menu .tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #466fb5;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .feed-tab-menu .tab.active {
+            background-color: #38e495;
+        }
+        
+        .ranking-tab-menu .tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #466fb5;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .ranking-tab-menu .tab.active {
+            background-color: #38e495;
+        }
+        
+        /* 대회 피드 콘텐츠 */
+        .feed-image-container {
+            position: relative;
+        }
+        
+        .feed-image {
+            width: 100%;
+            display: block;
+        }
+        
+        .feed-title-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(51, 51, 102, 0.8);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+        
+        .feed-list {
+            padding: 0;
+            border-top: 1px solid #eee;
+        }
+        
+        .feed-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: left;
+        }
+        
+        .feed-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        /* 대회 정보 스타일 */
+        .info-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            background-color: #1a3380;
+        }
+        
+        .info-button {
+            flex: 1;
+            min-width: 120px;
+            margin: 5px;
+            padding: 10px;
+            text-align: center;
+            background-color: white;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .info-button-title {
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .info-button-value {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .circle-icon {
+            position: absolute;
+            bottom: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            background-color: #38e495;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .ticket-button {
+            background-color: #38e495;
+            color: white;
+        }
+        
+        .tournament-info {
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .info-icon {
+            margin-right: 10px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .info-label {
+            min-width: 100px;
+            color: #666;
+        }
+        
+        .round-times {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        
+        .round-time {
+            flex: 0 0 calc(20% - 8px);
+            margin: 4px;
+            text-align: center;
+        }
+        
+        .round {
+            background-color: #999;
+            color: white;
+            padding: 4px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .time {
+            padding: 4px 0;
+            font-size: 14px;
+            background-color: #f0f0f0;
+        }
+        
+        .sponsors {
+            display: flex;
+            margin-top: 20px;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+        }
+        
+        .sponsor {
+            margin-right: 15px;
+        }
+        
+        /* 랭킹 스타일 */
+        .top-player {
+            background: linear-gradient(to right, #666666, #999999);
+            color: white;
+            padding: 20px 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .top-player.first-rank {
+            background: linear-gradient(to right, #1a75cf, #3399ff);
+        }
+        
+        .rank-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .player-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid white;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .player-name {
+            font-size: 20px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        
+        .player-score {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .ranking-table {
+            width: 100%;
+        }
+        
+        .ranking-header {
+            display: flex;
+            padding: 12px 15px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .ranking-item {
+            display: flex;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        
+        .col-rank {
+            flex: 0 0 15%;
+            text-align: center;
+        }
+        
+        .col-name {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .col-score {
+            flex: 0 0 30%;
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        .sg-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+        }
+        
+        .arrow-right {
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid #666;
+            border-right: 2px solid #666;
+            transform: rotate(45deg);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        
+        @media (max-width: 992px) {
+            .card-container {
+                flex-direction: column;
+            }
+            
+            .card {
+                width: 100%;
+            }
+            
+            .info-button {
+                min-width: calc(50% - 10px);
+            }
+            
+            .round-time {
+                flex: 0 0 calc(33.33% - 8px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: #fff;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+                padding: 1rem 0;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .header {
+                justify-content: flex-start;
+                padding-left: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-text">HBL</div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="index.html" class="active">ABOUT HBL</a></li>
+            <li><a href="schedule.html">일정</a></li>
+            <li><a href="tournament-records.html">리더보드</a></li>
+            <li><a href="tournament-records.html">기록</a></li>
+            <li><a href="players.html">선수정보</a></li>
+            <li><a href="#">이벤트</a></li>
+        </ul>
+        
+        <div class="menu-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </header>
+    
+    <div class="content">
+        <!-- 광고 배너 -->
+        <div class="ad-banner">
+            <img src="images/bokbanner.png" alt="광고 배너" class="banner-img">
+        </div>
+        
+        <!-- 카드 컨테이너 -->
+        <div class="card-container">
+            <!-- 대회 피드 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">라운딩 피드</h2>
+                    <a href="#" class="more-link">더 보기 &gt;</a>
+                </div>
+                
+                <div class="tab-menu feed-tab-menu">
+                    <div class="tab active">뉴스</div>
+                </div>
+                
+                <div id="featured-news" class="feed-image-container">
+                    <div class="loading">뉴스를 불러오는 중...</div>
+                </div>
+                
+                <div class="feed-list" id="news-list">
+                    <div class="loading">뉴스 목록을 불러오는 중...</div>
+                </div>
+            </div>
+            
+            <!-- 대회 정보 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">라운딩 정보</h2>
+                    <a href="#" class="more-link">더 보기 &gt;</a>
+                </div>
+                
+                <div class="info-buttons" id="round-info-buttons">
+                    <div class="loading" style="color: white; width: 100%; text-align: center;">라운딩 정보를 불러오는 중...</div>
+                </div>
+                
+                <div class="tournament-info" id="tournament-info">
+                    <div class="loading">상세 정보를 불러오는 중...</div>
+                </div>
+            </div>
+            
+            <!-- 이주의 랭킹 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">이주의 랭킹</h2>
+                    <a href="#" class="more-link">더 보기 &gt;</a>
+                </div>
+                
+                <div class="tab-menu ranking-tab-menu">
+                    <div class="tab active">랭킹</div>
+                </div>
+                
+                <div class="ranking-container" id="ranking-container">
+                    <div class="loading">랭킹을 불러오는 중...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:3001';
+        
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePage();
+        });
+        
+        // 페이지 초기화
+        async function initializePage() {
+            try {
+                await Promise.all([
+                    loadNews(),
+                    loadLatestRoundInfo(),
+                    loadRankings()
+                ]);
+            } catch (error) {
+                console.error('페이지 초기화 오류:', error);
+            }
+            
+            setupEventListeners();
+        }
+        
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 모바일 메뉴 토글
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            menuToggle?.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+            
+            // 현재 활성화된 메뉴 표시
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 탭 메뉴 기능
+            const feedTabs = document.querySelectorAll('.feed-tab-menu .tab');
+            feedTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    feedTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            const rankingTabs = document.querySelectorAll('.ranking-tab-menu .tab');
+            rankingTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    rankingTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        // 뉴스 로드
+        async function loadNews() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/news`);
+                if (!response.ok) throw new Error('뉴스 로드 실패');
+                
+                const news = await response.json();
+                
+                // 피처드 뉴스 표시
+                const featuredNews = news.find(item => item.is_featured) || news[0];
+                if (featuredNews) {
+                    const featuredNewsHtml = `
+                        <img src="${featuredNews.image_url || 'images/default-news.jpg'}" alt="뉴스 이미지" class="feed-image">
+                        <div class="feed-title-overlay">
+                            ${featuredNews.title}
+                        </div>
+                    `;
+                    document.getElementById('featured-news').innerHTML = featuredNewsHtml;
+                }
+                
+                // 뉴스 목록 표시
+                const newsListHtml = news.slice(0, 4).map(item => `
+                    <div class="feed-item">${item.title}</div>
+                `).join('');
+                
+                document.getElementById('news-list').innerHTML = newsListHtml || '<div class="feed-item">표시할 뉴스가 없습니다.</div>';
+                
+            } catch (error) {
+                console.error('뉴스 로드 오류:', error);
+                document.getElementById('featured-news').innerHTML = '<div class="error">뉴스를 불러올 수 없습니다.</div>';
+                document.getElementById('news-list').innerHTML = '<div class="error">뉴스 목록을 불러올 수 없습니다.</div>';
+            }
+        }
+        
+        // 최신 라운딩 정보 로드
+        async function loadLatestRoundInfo() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rounds`);
+                if (!response.ok) throw new Error('라운딩 정보 로드 실패');
+                
+                const rounds = await response.json();
+                const latestRound = rounds[0]; // 최신 라운딩
+                
+                if (!latestRound) {
+                    document.getElementById('round-info-buttons').innerHTML = '<div class="error" style="color: white;">등록된 라운딩이 없습니다.</div>';
+                    document.getElementById('tournament-info').innerHTML = '<div class="error">라운딩 정보가 없습니다.</div>';
+                    return;
+                }
+                
+                // 참가자 수 가져오기
+                const statsResponse = await fetch(`${API_BASE_URL}/api/rounds/${latestRound.id}/stats`);
+                const stats = await statsResponse.json();
+                
+                // 정보 버튼 업데이트
+                const infoButtonsHtml = `
+                    <div class="info-button">
+                        <div class="info-button-title">참가자</div>
+                        <div class="info-button-value">${stats.participant_count || 0}명</div>
+                        <div class="circle-icon">+</div>
+                    </div>
+                    <div class="info-button">
+                        <div class="info-button-title">조편성</div>
+                        <div class="info-button-value">${stats.participant_count || 0}명</div>
+                        <div class="circle-icon">+</div>
+                    </div>
+                    <div class="info-button">
+                        <div class="info-button-title">역대기록</div>
+                        <div class="info-button-value"></div>
+                        <div class="circle-icon">+</div>
+                    </div>
+                    <div class="info-button ticket-button">
+                        <div class="info-button-title">운전 차량</div>
+                        <div class="circle-icon">→</div>
+                    </div>
+                `;
+                
+                document.getElementById('round-info-buttons').innerHTML = infoButtonsHtml;
+                
+                // 상세 정보 업데이트
+                const tournamentInfoHtml = `
+                    <div class="info-row">
+                        <div class="info-icon">📅</div>
+                        <div class="info-label">라운딩 일정</div>
+                        <div>${formatDate(latestRound.round_date)} ${latestRound.tee_time ? formatTime(latestRound.tee_time) : ''}</div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-icon">🏌️</div>
+                        <div class="info-label">라운딩 장소</div>
+                        <div>${latestRound.course_name || '미지정'}</div>
+                    </div>
+                `;
+                
+                document.getElementById('tournament-info').innerHTML = tournamentInfoHtml;
+                
+            } catch (error) {
+                console.error('라운딩 정보 로드 오류:', error);
+                document.getElementById('round-info-buttons').innerHTML = '<div class="error" style="color: white;">라운딩 정보를 불러올 수 없습니다.</div>';
+                document.getElementById('tournament-info').innerHTML = '<div class="error">라운딩 정보를 불러올 수 없습니다.</div>';
+            }
+        }
+        
+        // 랭킹 로드
+        async function loadRankings() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rankings`);
+                if (!response.ok) throw new Error('랭킹 로드 실패');
+                
+                const rankings = await response.json();
+                
+                if (rankings.length === 0) {
+                    document.getElementById('ranking-container').innerHTML = '<div class="error">랭킹 데이터가 없습니다.</div>';
+                    return;
+                }
+                
+                let rankingHtml = '';
+                
+                rankings.forEach((player, index) => {
+                    const isFirst = index === 0;
+                    const playerProfileUrl = getPlayerProfileUrl(player.name);
+                    
+                    rankingHtml += `
+                        <div class="top-player ${isFirst ? 'first-rank' : ''}">
+                            <div class="rank-number">${index + 1}</div>
+                            <img src="${player.photo_url || '/api/placeholder/80/80'}" alt="${player.name}" class="player-photo">
+                            <div class="player-name">
+                                <a href="${playerProfileUrl}" style="color: white; text-decoration: none;">${player.name}</a>
+                            </div>
+                            <div class="player-score">${player.avg_score ? Math.round(player.avg_score) : 'N/A'}타</div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('ranking-container').innerHTML = rankingHtml;
+                
+            } catch (error) {
+                console.error('랭킹 로드 오류:', error);
+                document.getElementById('ranking-container').innerHTML = '<div class="error">랭킹을 불러올 수 없습니다.</div>';
+            }
+        }
+        
+        // 유틸리티 함수들
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const weekDay = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+            
+            return `${year}. ${month}. ${day} (${weekDay})`;
+        }
+        
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            const [hours, minutes] = timeString.split(':');
+            return `${hours}:${minutes}`;
+        }
+        
+        function getPlayerProfileUrl(playerName) {
+            const profileMapping = {
+                '김종혁': 'player-profile-page.html',
+                '정인석': 'player-profile-page-suk.html',
+                '김상현': 'player-profile-page-sang.html',
+                '조영복': 'player-profile-page-bok.html'
+            };
+            
+            return profileMapping[playerName] || '#';
+        }
+        
+        // API 연결 실패 시 fallback 데이터 (개발 모드용)
+        function loadFallbackData() {
+            console.log('API 서버에 연결할 수 없습니다. 기본 데이터를 표시합니다.');
+            
+            // 기본 뉴스 데이터
+            const fallbackNews = [
+                { title: '"거리충" 조영복 반전의 우승.. 잔디짬밥 무시못해..', image_url: 'images/stonegate.jpg', is_featured: true },
+                { title: '"훈수충" 김종혁 여전히 선두권 지켜.. 정상에서 내려올 생각없어' },
+                { title: '"아갈현" "훈수충" 제주도 전지훈련 참석' },
+                { title: '"아갈현" 김상현 양산 라운딩 반전 우승과 갈비뻐 맞바꿔..' }
+            ];
+            
+            // 뉴스 표시
+            document.getElementById('featured-news').innerHTML = `
+                <img src="${fallbackNews[0].image_url}" alt="뉴스 이미지" class="feed-image">
+                <div class="feed-title-overlay">${fallbackNews[0].title}</div>
+            `;
+            
+            document.getElementById('news-list').innerHTML = fallbackNews.slice(1).map(item => `
+                <div class="feed-item">${item.title}</div>
+            `).join('');
+            
+            // 기본 라운딩 정보
+            document.getElementById('round-info-buttons').innerHTML = `
+                <div class="info-button">
+                    <div class="info-button-title">참가자</div>
+                    <div class="info-button-value">4명</div>
+                    <div class="circle-icon">+</div>
+                </div>
+                <div class="info-button">
+                    <div class="info-button-title">조편성</div>
+                    <div class="info-button-value">4명</div>
+                    <div class="circle-icon">+</div>
+                </div>
+                <div class="info-button">
+                    <div class="info-button-title">역대기록</div>
+                    <div class="info-button-value"></div>
+                    <div class="circle-icon">+</div>
+                </div>
+                <div class="info-button ticket-button">
+                    <div class="info-button-title">운전 차량</div>
+                    <div class="circle-icon">→</div>
+                </div>
+            `;
+            
+            document.getElementById('tournament-info').innerHTML = `
+                <div class="info-row">
+                    <div class="info-icon">📅</div>
+                    <div class="info-label">라운딩 일정</div>
+                    <div>2025. 06. 06 (금) 아침 7시</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-icon">🏌️</div>
+                    <div class="info-label">라운딩 장소</div>
+                    <div>스톤게이트CC</div>
+                </div>
+            `;
+            
+            // 기본 랭킹 데이터
+            const fallbackRankings = [
+                { name: '김종혁', photo_url: 'images/jay.png', avg_score: 99 },
+                { name: '정인석', photo_url: 'images/suk.PNG', avg_score: 110 },
+                { name: '김상현', photo_url: 'images/sang.jpg', avg_score: 110 },
+                { name: '조영복', photo_url: 'images/bok2.jpg', avg_score: 113 }
+            ];
+            
+            let rankingHtml = '';
+            fallbackRankings.forEach((player, index) => {
+                const isFirst = index === 0;
+                const playerProfileUrl = getPlayerProfileUrl(player.name);
+                
+                rankingHtml += `
+                    <div class="top-player ${isFirst ? 'first-rank' : ''}">
+                        <div class="rank-number">${index + 1}</div>
+                        <img src="${player.photo_url}" alt="${player.name}" class="player-photo">
+                        <div class="player-name">
+                            <a href="${playerProfileUrl}" style="color: white; text-decoration: none;">${player.name}</a>
+                        </div>
+                        <div class="player-score">${player.avg_score}타</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('ranking-container').innerHTML = rankingHtml;
+        }
+        
+        // API 연결 테스트
+        fetch(`${API_BASE_URL}/api/players`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('API 연결 실패');
+                }
+            })
+            .catch(error => {
+                console.warn('API 서버 연결 실패, fallback 데이터 사용:', error);
+                loadFallbackData();
+            });
+    </script>
+</body>
+</html>
