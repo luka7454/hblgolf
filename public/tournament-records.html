@@ -211,11 +211,10 @@
         }
         
         .round-btn.active {
-            background-color: #c9e4ff;
+            background-color: #1a75cf;
             color: white;
             border-color: #1a75cf;
         }
-     
         
         .filter-options {
             display: flex;
@@ -394,6 +393,25 @@
             color: #1a75cf;
         }
         
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
         @media (max-width: 992px) {
             .round-header {
                 flex-direction: column;
@@ -508,23 +526,8 @@
     
     <div class="main-content">
         <!-- 라운딩 정보 헤더 -->
-        <div class="round-header">
-            <div class="round-title">
-                <h1 class="round-name">스톤게이트CC 라운딩</h1>
-                <div class="round-date">2025.06.06 (금) 오전 6:05 티오프</div>
-                <div class="round-venue">스톤게이트CC</div>
-                <div class="round-weather">날씨: 맑음, 기온: 24°C, 바람: 약함</div>
-            </div>
-            
-            <div class="round-info">
-                <div class="winner-info">
-                    
-                    <div class="winner-details">
-                        <div class="winner-label">우승자</div>
-                        <div class="winner-name">조영복 (95타)</div>
-                    </div>
-                </div>
-            </div>
+        <div class="round-header" id="round-header">
+            <div class="loading">라운딩 정보를 불러오는 중...</div>
         </div>
         
         <!-- 라운딩 선택 섹션 -->
@@ -532,7 +535,7 @@
             <div class="filter-options">
                 <div class="year-filter">
                     <span class="year-label">연도:</span>
-                    <select class="year-select">
+                    <select class="year-select" id="year-select">
                         <option value="2025">2025</option>
                         <option value="2024">2024</option>
                         <option value="2023">2023</option>
@@ -540,43 +543,21 @@
                 </div>
                 
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="골프장명 검색">
-                    <button class="search-btn">🔍</button>
+                    <input type="text" class="search-input" placeholder="골프장명 검색" id="search-input">
+                    <button class="search-btn" id="search-btn">🔍</button>
                 </div>
             </div>
             
             <h2 class="selector-title">2025 라운딩 기록</h2>
-            <div class="round-list">
-                <button class="round-btn active" data-round="stonegate">스톤게이트CC (06.06)</button>
-                <button class="round-btn" data-round="milyang">밀양 에스파크 (05.11)</button>
-                <button class="round-btn" data-round="arimier">아리미르CC (04.04)</button>
-                <button class="round-btn" data-round="yangsan">양산CC (03.19)</button>
-                
+            <div class="round-list" id="round-list">
+                <div class="loading">라운딩 목록을 불러오는 중...</div>
             </div>
         </div>
         
-        <!-- 라운딩 통계 요약 -->
+        <!-- 라운딩 통계 및 기록 -->
         <div class="records-container">
-            <div class="stats-summary">
-                <div class="stat-card">
-                    <div class="stat-title">참가자</div>
-                    <div class="stat-value">4명</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-title">평균 스코어</div>
-                    <div class="stat-value">109.5</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-title">베스트 스코어</div>
-                    <div class="stat-value">99</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-title">라운딩 시간</div>
-                    <div class="stat-value">4시간 30분</div>
-                </div>
+            <div class="stats-summary" id="stats-summary">
+                <div class="loading">통계를 불러오는 중...</div>
             </div>
             
             <table class="records-table">
@@ -591,238 +572,327 @@
                 </thead>
                 <tbody id="records-tbody">
                     <tr>
-                        <td><span class="rank first">1위</span></td>
-                        <td class="player-info">
-                            <img src="images/jay.png" alt="김종혁" class="player-photo">
-                            <span class="player-name"><a href="player-profile-page.html">김종혁</a></span>
-                        </td>
-                        <td class="score best">99</td>
-                        <td>2개</td>
-                        <td>3개</td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="rank second">2위</span></td>
-                        <td class="player-info">
-                            <img src="images/suk.PNG" alt="정인석" class="player-photo">
-                            <span class="player-name"><a href="#">정인석</a></span>
-                        </td>
-                        <td class="score good">108</td>
-                        <td>1개</td>
-                        <td>1개</td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="rank third">3위</span></td>
-                        <td class="player-info">
-                            <img src="images/sang.jpg" alt="김상현" class="player-photo">
-                            <span class="player-name"><a href="#">김상현</a></span>
-                        </td>
-                        <td class="score average">112</td>
-                        <td>0개</td>
-                        <td>2개</td>
-                    </tr>
-                    
-                    <tr>
-                        <td><span class="rank">4위</span></td>
-                        <td class="player-info">
-                            <img src="images/bok2.jpg" alt="조영복" class="player-photo">
-                            <span class="player-name"><a href="#">조영복</a></span>
-                        </td>
-                        <td class="score poor">119</td>
-                        <td>1개</td>
-                        <td>0개</td>
+                        <td colspan="5" class="loading">스코어 기록을 불러오는 중...</td>
                     </tr>
                 </tbody>
             </table>
             
-            <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+            <div id="round-review" style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; display: none;">
                 <h3 style="margin-bottom: 10px; color: #333;">라운딩 후기</h3>
-                <p style="line-height: 1.6; color: #666;">
-                    날씨가 좋아 모든 멤버들이 즐거운 라운딩을 했습니다. 김종혁 선수가 꾸준한 실력 향상으로 99타를 기록하며 우승했으며, 
-                    모든 참가자들이 평소보다 좋은 컨디션을 보여주었습니다. 라운딩 후 갈비뻐에서 회식을 가지며 즐거운 시간을 보냈습니다.
-                </p>
+                <p id="review-content" style="line-height: 1.6; color: #666;"></p>
             </div>
         </div>
     </div>
     
     <script>
-        // 대회별 데이터
-        const tournamentData = {
-            stonegate: {
-                name: "스톤게이트CC 라운딩",
-                date: "2025.06.06 (금) 06:05 티오프",
-                venue: "스톤게이트CC",
-                weather: "날씨: 맑음, 기온: 24°C, 바람: 약함",
-                winner: "조영복",
-                winnerScore: "95타",
-                participants: 4,
-                avgScore: 108.3,
-                bestScore: 95,
-                roundTime: "4시간 45분",
-                records: [
-                    { rank: "1위", name: "조영복", photo: "images/bok2.jpg", score: 95, scoreClass: "best", birdie: 1, nearest: 0 },
-                    { rank: "2위", name: "김종혁", photo: "images/jay.png", score: 99, scoreClass: "good", birdie: 0, nearest: 0 },
-                    { rank: "3위", name: "김상현", photo: "images/sang.jpg", score: 105, scoreClass: "average", birdie: 0, nearest: 0 },
-                    { rank: "4위", name: "정인석", photo: "images/suk.PNG", score: 114, scoreClass: "poor", birdie: 0, nearest: 0 }
-                ],
-                review: "'거리충' 조영복 반전의 우승.. 잔디짬밥 무시못해.."
-            },
-            milyang: {
-                name: "밀양 에스파크 라운딩",
-                date: "2025.05.11 (일) 13:35 티오프",
-                venue: "밀양 에스파크 골프장",
-                weather: "날씨: 맑음, 기온: 22°C, 바람: 약함",
-                winner: "김종혁",
-                winnerScore: "86타",
-                participants: 4,
-                avgScore: 109.5,
-                bestScore: 99,
-                roundTime: "4시간 30분",
-                records: [
-                    { rank: "1위", name: "김종혁", photo: "images/jay.png", score: 86, scoreClass: "best", birdie: 1, nearest: 1 },
-                    { rank: "2위", name: "정인석", photo: "images/suk.PNG", score: 102, scoreClass: "good", birdie: 0, nearest: 0},
-                    { rank: "3위", name: "조영복", photo: "images/bok2.jpg", score: 117, scoreClass: "average", birdie: 0, nearest: 0 },
-                    { rank: "4위", name: "김상현", photo: "images/sang.jpg", score: 119, scoreClass: "poor", birdie: 0, nearest: 0}
-                    
-                ],
-                review: "날씨도 너무 좋았고 김희 ? 캐디? 나이사~."
-            },
-            arimier: {
-                name: "아리미르CC 라운딩",
-                date: "2025.04.04 (금) 18:40 티오프",
-                venue: "아리미르 컨트리클럽 (아라OUT / 아라IN)",
-                weather: "날씨: 흐림, 기온: 18°C, 바람: 보통",
-                winner: "김종혁",
-                winnerScore: "100타",
-                participants: 4,
-                avgScore: 106.8,
-                bestScore: 95,
-                roundTime: "4시간 15분",
-                records: [
-                    { rank: "1위", name: "김종혁", photo: "images/jay.png", score: 100, scoreClass: "best", birdie: 0, nearest: 0 },
-                    { rank: "2위", name: "김상현", photo: "images/sang.jpg", score: 107, scoreClass: "good", birdie: 0, nearest: 0 },
-                    { rank: "3위", name: "정인석", photo: "images/suk.PNG", score: 107, scoreClass: "good", birdie: 0, nearest: 0 },
-                    { rank: "4위", name: "조영복", photo: "images/bok2.jpg", score: 117, scoreClass: "poor", birdie: 0, nearest: 0 }
-                ],
-                review: "아갈현의 갈비부상의 시작점"
-            },
-            yangsan: {
-                name: "양산CC 라운딩",
-                date: "2025.03.19 (수) 18:40 티오프",
-                venue: "양산 컨트리클럽 (가온코스)",
-                weather: "날씨: 맑음, 기온: 16°C, 바람: 강함",
-                winner: "김상현",
-                winnerScore: "97타",
-                participants: 4,
-                avgScore: 108.3,
-                bestScore: 97,
-                roundTime: "4시간 45분",
-                records: [
-                    { rank: "1위", name: "김상현", photo: "images/sang.jpg", score: 109, scoreClass: "best", birdie: 0, nearest: 1 },
-                    { rank: "2위", name: "김종혁", photo: "images/jay.png", score: 111, scoreClass: "good", birdie: 0, nearest: 1 },
-                    { rank: "3위", name: "정인석", photo: "images/suk.PNG", score: 116, scoreClass: "average", birdie: 0, nearest: 0 },
-                    { rank: "4위", name: "조영복", photo: "images/bok2.jpg", score: 123, scoreClass: "poor", birdie: 0, nearest: 0 }
-                ],
-                review: "반전의 '아갈현' 김상현의 우승.. '훈수충' 멘탈 심하게 흔들려, 캐디 씨x년"
+        const API_BASE_URL = 'https://port-0-hblgolfbakend-mb4ipg5fd735a020.sel4.cloudtype.app';
+        let currentRounds = [];
+        let currentRoundId = null;
+        
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRounds();
+            setupEventListeners();
+        });
+        
+        // 이벤트 리스너 설정
+        function setupEventListeners() {
+            // 모바일 메뉴 토글
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            menuToggle?.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+            
+            // 연도 선택 변경
+            document.getElementById('year-select').addEventListener('change', function() {
+                loadRounds(this.value);
+            });
+            
+            // 검색 기능
+            const searchBtn = document.getElementById('search-btn');
+            const searchInput = document.getElementById('search-input');
+            
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
+        
+        // 라운딩 목록 로드
+        async function loadRounds(year = '2025') {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rounds`);
+                if (!response.ok) {
+                    throw new Error('라운딩 데이터를 불러올 수 없습니다.');
+                }
+                
+                const rounds = await response.json();
+                currentRounds = rounds.filter(round => round.round_date.startsWith(year));
+                
+                displayRoundList();
+                
+                // 첫 번째 라운딩 자동 선택
+                if (currentRounds.length > 0) {
+                    selectRound(currentRounds[0].id);
+                }
+                
+            } catch (error) {
+                console.error('라운딩 로드 오류:', error);
+                showError('라운딩 목록을 불러오는데 실패했습니다.');
+            }
+        }
+        
+        // 라운딩 목록 표시
+        function displayRoundList() {
+            const roundList = document.getElementById('round-list');
+            
+            if (currentRounds.length === 0) {
+                roundList.innerHTML = '<div class="error">해당 연도의 라운딩 기록이 없습니다.</div>';
+                return;
             }
             
-
-        };
-
+            roundList.innerHTML = '';
+            
+            currentRounds.forEach((round, index) => {
+                const button = document.createElement('button');
+                button.className = `round-btn ${index === 0 ? 'active' : ''}`;
+                button.setAttribute('data-round-id', round.id);
+                button.textContent = `${round.course_name || '미지정'} (${formatDate(round.round_date)})`;
+                
+                button.addEventListener('click', () => {
+                    // 기존 활성 버튼 비활성화
+                    document.querySelectorAll('.round-btn').forEach(btn => btn.classList.remove('active'));
+                    // 현재 버튼 활성화
+                    button.classList.add('active');
+                    // 라운딩 선택
+                    selectRound(round.id);
+                });
+                
+                roundList.appendChild(button);
+            });
+        }
         
-
-        // 페이지 로드 시 초기 데이터 설정
-        function updateTournamentData(tournamentKey) {
-            const data = tournamentData[tournamentKey];
+        // 라운딩 선택
+        async function selectRound(roundId) {
+            currentRoundId = roundId;
             
-            // 헤더 정보 업데이트
-            document.querySelector('.round-name').textContent = data.name;
-            document.querySelector('.round-date').textContent = data.date;
-            document.querySelector('.round-venue').textContent = data.venue;
-            document.querySelector('.round-weather').textContent = data.weather;
-            document.querySelector('.winner-name').textContent = `${data.winner} (${data.winnerScore})`;
+            try {
+                // 라운딩 정보 로드
+                await loadRoundInfo(roundId);
+                // 스코어 로드
+                await loadScores(roundId);
+                // 통계 로드
+                await loadStats(roundId);
+                
+            } catch (error) {
+                console.error('라운딩 데이터 로드 오류:', error);
+                showError('라운딩 데이터를 불러오는데 실패했습니다.');
+            }
+        }
+        
+        // 라운딩 정보 로드
+        async function loadRoundInfo(roundId) {
+            const response = await fetch(`${API_BASE_URL}/api/rounds/${roundId}`);
+            if (!response.ok) throw new Error('라운딩 정보 로드 실패');
             
-            // 통계 업데이트
-            document.querySelectorAll('.stat-value')[0].textContent = `${data.participants}명`;
-            document.querySelectorAll('.stat-value')[1].textContent = data.avgScore;
-            document.querySelectorAll('.stat-value')[2].textContent = data.bestScore;
-            document.querySelectorAll('.stat-value')[3].textContent = data.roundTime;
+            const round = await response.json();
             
-            // 테이블 업데이트
+            // 우승자 정보 가져오기
+            const scoresResponse = await fetch(`${API_BASE_URL}/api/rounds/${roundId}/scores`);
+            const scores = await scoresResponse.json();
+            const winner = scores.find(score => score.ranking === 1);
+            
+            const headerHtml = `
+                <div class="round-title">
+                    <h1 class="round-name">${round.round_name}</h1>
+                    <div class="round-date">${formatDateTime(round.round_date, round.tee_time)}</div>
+                    <div class="round-venue">${round.course_name || '골프장 정보 없음'}</div>
+                    <div class="round-weather">${formatWeather(round.weather, round.temperature, round.wind_condition)}</div>
+                </div>
+                
+                <div class="round-info">
+                    <div class="winner-info">
+                        ${winner ? `
+                            <img src="${winner.photo_url || '/api/placeholder/60/60'}" alt="${winner.name}" class="winner-photo">
+                            <div class="winner-details">
+                                <div class="winner-label">우승자</div>
+                                <div class="winner-name">${winner.name} (${winner.total_score}타)</div>
+                            </div>
+                        ` : `
+                            <div class="winner-details">
+                                <div class="winner-label">우승자</div>
+                                <div class="winner-name">미정</div>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('round-header').innerHTML = headerHtml;
+        }
+        
+        // 스코어 로드
+        async function loadScores(roundId) {
+            const response = await fetch(`${API_BASE_URL}/api/rounds/${roundId}/scores`);
+            if (!response.ok) throw new Error('스코어 로드 실패');
+            
+            const scores = await response.json();
             const tbody = document.getElementById('records-tbody');
+            
+            if (scores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">스코어 기록이 없습니다.</td></tr>';
+                return;
+            }
+            
             tbody.innerHTML = '';
             
-            data.records.forEach((record, index) => {
-                const rankClass = index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : '';
-                const row = `
-                    <tr>
-                        <td><span class="rank ${rankClass}">${record.rank}</span></td>
-                        <td class="player-info">
-                            <img src="${record.photo}" alt="${record.name}" class="player-photo">
-                            <span class="player-name"><a href="#">${record.name}</a></span>
-                        </td>
-                        <td class="score ${record.scoreClass}">${record.score}</td>
-                        <td>${record.birdie}개</td>
-                        <td>${record.nearest}개</td>
-                    </tr>
+            scores.forEach(score => {
+                const rankClass = score.ranking === 1 ? 'first' : score.ranking === 2 ? 'second' : score.ranking === 3 ? 'third' : '';
+                const scoreClass = getScoreClass(score.total_score);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="rank ${rankClass}">${score.ranking}위</span></td>
+                    <td class="player-info">
+                        <img src="${score.photo_url || '/api/placeholder/40/40'}" alt="${score.name}" class="player-photo">
+                        <span class="player-name"><a href="#">${score.name}</a></span>
+                    </td>
+                    <td class="score ${scoreClass}">${score.total_score}</td>
+                    <td>${score.birdie_count || 0}개</td>
+                    <td>${score.nearest_count || 0}개</td>
                 `;
-                tbody.innerHTML += row;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // 통계 로드
+        async function loadStats(roundId) {
+            const response = await fetch(`${API_BASE_URL}/api/rounds/${roundId}/stats`);
+            if (!response.ok) throw new Error('통계 로드 실패');
+            
+            const stats = await response.json();
+            const round = currentRounds.find(r => r.id == roundId);
+            
+            const statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-title">참가자</div>
+                    <div class="stat-value">${stats.participant_count}명</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-title">평균 스코어</div>
+                    <div class="stat-value">${stats.avg_score ? stats.avg_score.toFixed(1) : 'N/A'}</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-title">베스트 스코어</div>
+                    <div class="stat-value">${stats.best_score || 'N/A'}</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-title">라운딩 시간</div>
+                    <div class="stat-value">${round?.round_time || 'N/A'}</div>
+                </div>
+            `;
+            
+            document.getElementById('stats-summary').innerHTML = statsHtml;
+        }
+        
+        // 검색 기능
+        function performSearch() {
+            const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                displayRoundList();
+                return;
+            }
+            
+            const filteredRounds = currentRounds.filter(round => 
+                (round.course_name || '').toLowerCase().includes(searchTerm) ||
+                round.round_name.toLowerCase().includes(searchTerm)
+            );
+            
+            const roundList = document.getElementById('round-list');
+            
+            if (filteredRounds.length === 0) {
+                roundList.innerHTML = '<div class="error">검색 결과가 없습니다.</div>';
+                return;
+            }
+            
+            roundList.innerHTML = '';
+            
+            filteredRounds.forEach((round, index) => {
+                const button = document.createElement('button');
+                button.className = `round-btn ${index === 0 ? 'active' : ''}`;
+                button.setAttribute('data-round-id', round.id);
+                button.textContent = `${round.course_name || '미지정'} (${formatDate(round.round_date)})`;
+                
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.round-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    selectRound(round.id);
+                });
+                
+                roundList.appendChild(button);
             });
             
-            // 후기 업데이트
-            const reviewSection = document.querySelector('.records-container div:last-child p');
-            reviewSection.textContent = data.review;
+            // 첫 번째 검색 결과 자동 선택
+            if (filteredRounds.length > 0) {
+                selectRound(filteredRounds[0].id);
+            }
         }
-
-        // 모바일 메뉴 토글 기능
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
         
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
+        // 유틸리티 함수들
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+        }
         
-        // 라운딩 선택 버튼 활성화
-        const roundButtons = document.querySelectorAll('.round-btn');
-        roundButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                roundButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                const tournamentKey = this.getAttribute('data-round');
-                updateTournamentData(tournamentKey);
-            });
-        });
-        
-        // 연도 선택 변경 이벤트
-        const yearSelect = document.querySelector('.year-select');
-        yearSelect.addEventListener('change', function() {
-            alert(`${this.value}년 라운딩 기록을 불러옵니다.`);
-        });
-        
-        // 골프장명 검색 기능
-        const searchInput = document.querySelector('.search-input');
-        const searchBtn = document.querySelector('.search-btn');
-        
-        searchBtn.addEventListener('click', function() {
-            const searchTerm = searchInput.value.trim();
-            if (searchTerm) {
-                alert(`"${searchTerm}" 검색 결과를 불러옵니다.`);
+        function formatDateTime(dateString, timeString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const weekDay = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+            
+            let timeStr = '';
+            if (timeString) {
+                const [hours, minutes] = timeString.split(':');
+                const hour = parseInt(hours);
+                const period = hour >= 12 ? '오후' : '오전';
+                const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+                timeStr = ` ${period} ${displayHour}:${minutes} 티오프`;
             }
-        });
+            
+            return `${year}.${month}.${day} (${weekDay})${timeStr}`;
+        }
         
-        // 엔터키 검색 기능
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                searchBtn.click();
-            }
-        });
+        function formatWeather(weather, temperature, windCondition) {
+            let weatherStr = '';
+            if (weather) weatherStr += `날씨: ${weather}`;
+            if (temperature) weatherStr += `, 기온: ${temperature}°C`;
+            if (windCondition) weatherStr += `, 바람: ${windCondition}`;
+            return weatherStr || '날씨 정보 없음';
+        }
         
-        // 페이지 로드 시 기본 데이터 로드
-        document.addEventListener('DOMContentLoaded', function() {
-            updateTournamentData('stonegate');
-        });
+        function getScoreClass(score) {
+            if (score <= 90) return 'best';
+            if (score <= 100) return 'good';
+            if (score <= 110) return 'average';
+            return 'poor';
+        }
+        
+        function showError(message) {
+            const errorHtml = `<div class="error">${message}</div>`;
+            document.getElementById('round-header').innerHTML = errorHtml;
+            document.getElementById('round-list').innerHTML = errorHtml;
+            document.getElementById('stats-summary').innerHTML = errorHtml;
+            document.getElementById('records-tbody').innerHTML = `<tr><td colspan="5">${message}</td></tr>`;
+        }
     </script>
 </body>
 </html>

@@ -16,7 +16,7 @@ app.use(cors({
         'http://localhost:3001', 
         'http://localhost:8080',
         'https://web-hblgolf-mb4ipg5fd735a020.sel4.cloudtype.app', // 👈 새 프론트엔드 도메인 추가
-        process.env.FRONTEND_URL || 'https://your-frontend-domain.com'
+        process.env.FRONTEND_URL || 'https://web-hblgolf-mb4ipg5fd735a020.sel4.cloudtype.app'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
