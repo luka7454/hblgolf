@@ -1,4 +1,4 @@
-// server.js - HBL 골프 클럽 백엔드 API 서버
+// server.js - 클라우드타입용 수정 버전
 
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
@@ -7,12 +7,22 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080; // 클라우드타입은 8080 포트 사용
 
 // 미들웨어 설정
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public')); // 정적 파일 서빙
+
+// 헬스체크 엔드포인트 (클라우드타입용)
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK', 
+        service: 'HBL Golf Club API',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
 
 // 데이터베이스 연결
 const dbPath = path.join(__dirname, 'hbl_golf.db');
@@ -27,7 +37,7 @@ function initializeDatabase() {
             if (err) {
                 console.error('데이터베이스 초기화 오류:', err.message);
             } else {
-                console.log('데이터베이스가 초기화되었습니다.');
+                console.log('✅ 데이터베이스가 초기화되었습니다.');
             }
         });
     }
@@ -313,9 +323,19 @@ app.post('/api/admin/news', (req, res) => {
     });
 });
 
-// 서버 시작
-app.listen(PORT, () => {
-    console.log(`HBL 골프 클럽 API 서버가 http://localhost:${PORT}에서 실행 중입니다.`);
+// 서버 시작 - 클라우드타입용 수정
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🏌️‍♂️ HBL 골프 클럽 API 서버가 포트 ${PORT}에서 실행 중입니다.`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    
+    // 클라우드타입 환경 확인
+    if (process.env.NODE_ENV === 'production') {
+        console.log('🚀 클라우드타입 프로덕션 환경에서 실행 중입니다.');
+    } else {
+        console.log('🔧 로컬 개발 환경에서 실행 중입니다.');
+        console.log(`📱 로컬 접속: http://localhost:${PORT}`);
+    }
+    
     initializeDatabase();
 });
 
