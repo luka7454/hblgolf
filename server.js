@@ -57,13 +57,16 @@ function initializeDatabase() {
 // API 라우트
 
 // 1. 선수 관련 API
+// 기존 /api/players 라우트를 이것으로 교체
 app.get('/api/players', (req, res) => {
     const query = `
         SELECT p.*, 
                AVG(s.total_score) as avg_score,
                MIN(s.total_score) as best_score,
                COUNT(CASE WHEN s.ranking = 1 THEN 1 END) as wins,
-               COUNT(CASE WHEN s.ranking <= 3 THEN 1 END) as top3
+               COUNT(CASE WHEN s.ranking <= 3 THEN 1 END) as top3,
+               SUM(s.birdie_count) as total_birdies,
+               SUM(s.nearest_count) as total_nearest
         FROM players p
         LEFT JOIN scores s ON p.id = s.player_id
         GROUP BY p.id
@@ -79,6 +82,7 @@ app.get('/api/players', (req, res) => {
     });
 });
 
+// 기존 /api/players/:id 라우트를 이것으로 교체
 app.get('/api/players/:id', (req, res) => {
     const playerId = req.params.id;
     const query = `
@@ -86,7 +90,9 @@ app.get('/api/players/:id', (req, res) => {
                AVG(s.total_score) as avg_score,
                MIN(s.total_score) as best_score,
                COUNT(CASE WHEN s.ranking = 1 THEN 1 END) as wins,
-               COUNT(CASE WHEN s.ranking <= 3 THEN 1 END) as top3
+               COUNT(CASE WHEN s.ranking <= 3 THEN 1 END) as top3,
+               SUM(s.birdie_count) as total_birdies,
+               SUM(s.nearest_count) as total_nearest
         FROM players p
         LEFT JOIN scores s ON p.id = s.player_id
         WHERE p.id = ?
@@ -317,6 +323,8 @@ app.put('/api/admin/rounds/status/finished-all', (req, res) => {
     });
 });
 
+
+
 // 골프장 목록 API
 app.get('/api/courses', (req, res) => {
     const query = 'SELECT * FROM golf_courses ORDER BY name';
@@ -359,6 +367,35 @@ app.post('/api/admin/news', (req, res) => {
         res.json({ id: this.lastID, message: '뉴스가 추가되었습니다.' });
     });
 });
+
+
+// 선수 정보 수정 API - server.js의 관리자 API 섹션에 추가
+app.put('/api/admin/players/:id', (req, res) => {
+    const playerId = req.params.id;
+    const { name, eng_name, nationality, birth_date, height, weight, membership_type, join_year, political_view, photo_url, sponsor_img, membership_id } = req.body;
+    
+    const query = `
+        UPDATE players SET 
+            name = ?, eng_name = ?, nationality = ?, birth_date = ?, 
+            height = ?, weight = ?, membership_type = ?, join_year = ?, 
+            political_view = ?, photo_url = ?, sponsor_img = ?, membership_id = ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+    `;
+    
+    db.run(query, [name, eng_name, nationality, birth_date, height, weight, membership_type, join_year, political_view, photo_url, sponsor_img, membership_id, playerId], function(err) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (this.changes === 0) {
+            res.status(404).json({ error: '선수를 찾을 수 없습니다.' });
+            return;
+        }
+        res.json({ message: '선수 정보가 수정되었습니다.' });
+    });
+});
+
 
 // 데이터베이스 상태 확인 API
 app.get('/api/admin/db-status', (req, res) => {

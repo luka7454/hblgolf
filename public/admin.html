@@ -290,6 +290,7 @@
             <button class="nav-btn" onclick="showSection('add-course')">골프장 추가</button>
             <button class="nav-btn" onclick="showSection('add-news')">뉴스 추가</button>
             <button class="nav-btn" onclick="showSection('view-data')">데이터 조회</button>
+            <button class="nav-btn" onclick="showSection('manage-players')">선수 관리</button>
         </div>
         
         <!-- 새 라운딩 추가 섹션 -->
@@ -539,6 +540,122 @@
         </div>
     </div>
     
+        <!-- 선수 관리 섹션 - view-data 섹션 다음에 추가 -->
+<div id="manage-players" class="admin-section">
+    <h2 class="section-title">선수 관리</h2>
+    
+    <div class="alert alert-success" id="player-success-alert"></div>
+    <div class="alert alert-error" id="player-error-alert"></div>
+    
+    <div style="margin-bottom: 20px;">
+        <button class="btn" onclick="loadPlayersForEdit()">선수 목록 새로고침</button>
+    </div>
+    
+    <table class="data-table" id="players-manage-table">
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>영문명</th>
+                <th>국적</th>
+                <th>입회년도</th>
+                <th>총 버디수</th>
+                <th>총 니어수</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 데이터가 동적으로 삽입됩니다 -->
+        </tbody>
+    </table>
+    
+    <!-- 선수 정보 수정 모달 -->
+    <div id="edit-player-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 10px; padding: 30px; width: 90%; max-width: 600px; max-height: 90%; overflow-y: auto;">
+            <h3 style="margin-bottom: 20px;">선수 정보 수정</h3>
+            
+            <form id="edit-player-form">
+                <input type="hidden" id="edit-player-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-name">이름</label>
+                        <input type="text" id="edit-name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-eng-name">영문명</label>
+                        <input type="text" id="edit-eng-name" name="eng_name">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-nationality">국적</label>
+                        <input type="text" id="edit-nationality" name="nationality">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-birth-date">생년월일</label>
+                        <input type="date" id="edit-birth-date" name="birth_date">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-height">신장 (cm)</label>
+                        <input type="number" id="edit-height" name="height">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-weight">체중 (kg)</label>
+                        <input type="number" id="edit-weight" name="weight">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-membership-type">회원구분</label>
+                        <input type="text" id="edit-membership-type" name="membership_type" value="HBL 정회원">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-join-year">입회년도</label>
+                        <input type="number" id="edit-join-year" name="join_year">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-political-view">정치성향</label>
+                    <input type="text" id="edit-political-view" name="political_view">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-photo-url">사진 URL</label>
+                        <input type="text" id="edit-photo-url" name="photo_url">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-sponsor-img">스폰서 이미지 URL</label>
+                        <input type="text" id="edit-sponsor-img" name="sponsor_img">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-membership-id">회원번호</label>
+                    <input type="text" id="edit-membership-id" name="membership_id">
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">수정 완료</button>
+                    <button type="button" class="btn" onclick="closeEditModal()">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
     <script>
         const API_BASE_URL = 'https://port-0-hblgolfbakend-mb4ipg5fd735a020.sel4.cloudtype.app';
         

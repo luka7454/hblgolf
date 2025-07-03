@@ -275,7 +275,7 @@
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
@@ -822,6 +822,18 @@
                                 <div class="stat-title">평균 드라이브 거리</div>
                                 <div class="stat-value">${getAverageDriveDistance()}</div>
                             </div>
+
+                            <div class="stat-card">
+                                <div class="stat-title">총 버디수</div>
+                                <div class="stat-value">${currentPlayer.total_birdies || 0}</div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-title">총 니어수</div>
+                                <div class="stat-value">${currentPlayer.total_nearest || 0}</div>
+                            </div>
+
+
                         </div>
                     </div>
                     
