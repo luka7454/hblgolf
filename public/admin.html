@@ -684,6 +684,8 @@
                 loadRoundsForManagement();
             } else if (sectionId === 'view-data') {
                 loadAllData();
+            } else if (sectionId === 'manage-players') {
+                loadPlayersForEdit();
             }
         }
         
@@ -1046,6 +1048,116 @@
             }
         }
         
+        // 선수 관리 관련 함수들 - 기존 script 태그 안에 추가
+
+        // 선수 목록 로드 (수정용)
+        async function loadPlayersForEdit() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/players`);
+                const players = await response.json();
+                
+                const tbody = document.querySelector('#players-manage-table tbody');
+                tbody.innerHTML = '';
+                
+                players.forEach(player => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${player.name}</td>
+                        <td>${player.eng_name || ''}</td>
+                        <td>${player.nationality || ''}</td>
+                        <td>${player.join_year || ''}</td>
+                        <td>${player.total_birdies || 0}개</td>
+                        <td>${player.total_nearest || 0}개</td>
+                        <td>
+                            <button class="btn btn-success" onclick="openEditModal(${player.id})">수정</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('선수 목록 로드 오류:', error);
+                showAlert('player-error-alert', '선수 목록을 불러오는데 실패했습니다.', false);
+            }
+        }
+
+        // 선수 수정 모달 열기
+        async function openEditModal(playerId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/players/${playerId}`);
+                const player = await response.json();
+                
+                // 폼에 기존 데이터 채우기
+                document.getElementById('edit-player-id').value = player.id;
+                document.getElementById('edit-name').value = player.name || '';
+                document.getElementById('edit-eng-name').value = player.eng_name || '';
+                document.getElementById('edit-nationality').value = player.nationality || '';
+                document.getElementById('edit-birth-date').value = player.birth_date || '';
+                document.getElementById('edit-height').value = player.height || '';
+                document.getElementById('edit-weight').value = player.weight || '';
+                document.getElementById('edit-membership-type').value = player.membership_type || '';
+                document.getElementById('edit-join-year').value = player.join_year || '';
+                document.getElementById('edit-political-view').value = player.political_view || '';
+                document.getElementById('edit-photo-url').value = player.photo_url || '';
+                document.getElementById('edit-sponsor-img').value = player.sponsor_img || '';
+                document.getElementById('edit-membership-id').value = player.membership_id || '';
+                
+                // 모달 표시
+                document.getElementById('edit-player-modal').style.display = 'block';
+                
+            } catch (error) {
+                console.error('선수 정보 로드 오류:', error);
+                showAlert('player-error-alert', '선수 정보를 불러오는데 실패했습니다.', false);
+            }
+        }
+
+        // 선수 수정 모달 닫기
+        function closeEditModal() {
+            document.getElementById('edit-player-modal').style.display = 'none';
+        }
+
+        // 선수 정보 수정 폼 제출
+        document.addEventListener('DOMContentLoaded', function() {
+            // 기존 코드...
+            
+            // 선수 정보 수정 폼 이벤트 추가
+            const editPlayerForm = document.getElementById('edit-player-form');
+            if (editPlayerForm) {
+                editPlayerForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const playerId = document.getElementById('edit-player-id').value;
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData.entries());
+                    
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/api/admin/players/${playerId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (response.ok) {
+                            showAlert('player-success-alert', result.message);
+                            closeEditModal();
+                            loadPlayersForEdit(); // 목록 새로고침
+                        } else {
+                            showAlert('player-error-alert', result.error, false);
+                        }
+                    } catch (error) {
+                        console.error('선수 정보 수정 오류:', error);
+                        showAlert('player-error-alert', '선수 정보 수정 중 오류가 발생했습니다.', false);
+                    }
+                });
+            }
+        });
+
+                
+
         // 폼 제출 이벤트 처리
         
         // 라운딩 추가 폼
@@ -1108,6 +1220,8 @@
             }
         });
         
+
+
         // 뉴스 추가 폼
         document.getElementById('news-form').addEventListener('submit', async function(e) {
             e.preventDefault();
