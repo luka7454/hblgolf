@@ -141,6 +141,15 @@
         .btn-danger:hover {
             background-color: #c82333;
         }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
         
         .alert {
             padding: 15px;
@@ -211,6 +220,40 @@
         .loading.show {
             display: block;
         }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-finished {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-upcoming {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .status-ongoing {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .round-status-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .round-status-controls select {
+            min-width: 120px;
+        }
         
         @media (max-width: 768px) {
             .form-row {
@@ -243,6 +286,7 @@
         <div class="admin-nav">
             <button class="nav-btn active" onclick="showSection('add-round')">새 라운딩 추가</button>
             <button class="nav-btn" onclick="showSection('add-scores')">스코어 입력</button>
+            <button class="nav-btn" onclick="showSection('manage-rounds')">라운딩 관리</button>
             <button class="nav-btn" onclick="showSection('add-course')">골프장 추가</button>
             <button class="nav-btn" onclick="showSection('add-news')">뉴스 추가</button>
             <button class="nav-btn" onclick="showSection('view-data')">데이터 조회</button>
@@ -341,6 +385,33 @@
             </div>
             
             <button type="button" class="btn" onclick="saveAllScores()">모든 스코어 저장</button>
+        </div>
+
+        <!-- 라운딩 관리 섹션 (새로 추가) -->
+        <div id="manage-rounds" class="admin-section">
+            <h2 class="section-title">라운딩 관리</h2>
+            
+            <div class="alert alert-success" id="manage-success-alert"></div>
+            <div class="alert alert-error" id="manage-error-alert"></div>
+
+            <div style="margin-bottom: 20px;">
+                <button class="btn btn-warning" onclick="updateAllRoundsToFinished()">모든 라운딩을 완료 상태로 변경</button>
+            </div>
+            
+            <table class="data-table" id="rounds-manage-table">
+                <thead>
+                    <tr>
+                        <th>날짜</th>
+                        <th>라운딩명</th>
+                        <th>골프장</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 데이터가 동적으로 삽입됩니다 -->
+                </tbody>
+            </table>
         </div>
         
         <!-- 골프장 추가 섹션 -->
@@ -492,6 +563,8 @@
                 loadRoundsForScore();
             } else if (sectionId === 'add-news') {
                 loadRoundsForNews();
+            } else if (sectionId === 'manage-rounds') {
+                loadRoundsForManagement();
             } else if (sectionId === 'view-data') {
                 loadAllData();
             }
@@ -566,6 +639,116 @@
                 });
             } catch (error) {
                 console.error('라운딩 로드 오류:', error);
+            }
+        }
+
+        // 라운딩 관리용 목록 로드 (새로 추가)
+        async function loadRoundsForManagement() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/rounds`);
+                const rounds = await response.json();
+                
+                const tbody = document.querySelector('#rounds-manage-table tbody');
+                tbody.innerHTML = '';
+                
+                rounds.forEach(round => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${round.round_date}</td>
+                        <td>${round.round_name}</td>
+                        <td>${round.course_name || '미지정'}</td>
+                        <td>
+                            <span class="status-badge status-${round.status}">${getStatusText(round.status)}</span>
+                        </td>
+                        <td>
+                            <div class="round-status-controls">
+                                <select onchange="updateRoundStatus(${round.id}, this.value)">
+                                    <option value="upcoming" ${round.status === 'upcoming' ? 'selected' : ''}>예정</option>
+                                    <option value="ongoing" ${round.status === 'ongoing' ? 'selected' : ''}>진행중</option>
+                                    <option value="finished" ${round.status === 'finished' ? 'selected' : ''}>완료</option>
+                                </select>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('라운딩 관리 목록 로드 오류:', error);
+            }
+        }
+
+        // 상태 텍스트 변환
+        function getStatusText(status) {
+            const statusMap = {
+                'upcoming': '예정',
+                'ongoing': '진행중',
+                'finished': '완료'
+            };
+            return statusMap[status] || status;
+        }
+
+        // 라운딩 상태 업데이트 (새로 추가)
+        async function updateRoundStatus(roundId, newStatus) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/rounds/${roundId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert('manage-success-alert', `라운딩 상태가 "${getStatusText(newStatus)}"로 변경되었습니다.`);
+                    // 상태 배지 업데이트
+                    loadRoundsForManagement();
+                } else {
+                    showAlert('manage-error-alert', result.error, false);
+                }
+            } catch (error) {
+                console.error('라운딩 상태 업데이트 오류:', error);
+                showAlert('manage-error-alert', '상태 업데이트 중 오류가 발생했습니다.', false);
+            }
+        }
+
+        // 모든 라운딩을 완료 상태로 변경 (새로 추가)
+        async function updateAllRoundsToFinished() {
+            try {
+                // 모든 라운딩 가져오기
+                const response = await fetch(`${API_BASE_URL}/api/rounds`);
+                const rounds = await response.json();
+                
+                let updatedCount = 0;
+                
+                // 각 라운딩의 상태를 finished로 업데이트
+                for (const round of rounds) {
+                    if (round.status !== 'finished') {
+                        const updateResponse = await fetch(`${API_BASE_URL}/api/admin/rounds/${round.id}/status`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status: 'finished' })
+                        });
+                        
+                        if (updateResponse.ok) {
+                            updatedCount++;
+                        }
+                    }
+                }
+                
+                if (updatedCount > 0) {
+                    showAlert('manage-success-alert', `${updatedCount}개의 라운딩이 완료 상태로 변경되었습니다.`);
+                    loadRoundsForManagement(); // 목록 새로고침
+                } else {
+                    showAlert('manage-success-alert', '모든 라운딩이 이미 완료 상태입니다.');
+                }
+                
+            } catch (error) {
+                console.error('일괄 상태 업데이트 오류:', error);
+                showAlert('manage-error-alert', '일괄 업데이트 중 오류가 발생했습니다.', false);
             }
         }
         
@@ -714,7 +897,7 @@
                         <td>${round.round_name}</td>
                         <td>${round.course_name || '미지정'}</td>
                         <td>${round.winner_name || '미정'} ${round.winner_score ? `(${round.winner_score}타)` : ''}</td>
-                        <td>${round.status}</td>
+                        <td><span class="status-badge status-${round.status}">${getStatusText(round.status)}</span></td>
                     `;
                     roundsTableBody.appendChild(row);
                 });

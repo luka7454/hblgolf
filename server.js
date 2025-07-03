@@ -1,4 +1,4 @@
-// server.js - 클라우드타입용 수정 버전
+// server.js - 클라우드타입용 수정 버전 (라운딩 상태 관리 강화)
 
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
@@ -239,13 +239,13 @@ app.get('/api/rankings', (req, res) => {
 
 // 관리자 API (데이터 입력용)
 
-// 새 라운딩 추가
+// 새 라운딩 추가 (기본값을 finished로 설정)
 app.post('/api/admin/rounds', (req, res) => {
     const { round_name, round_date, course_id, tee_time, weather, temperature, wind_condition, round_time, prize_money } = req.body;
     
     const query = `
         INSERT INTO rounds (round_name, round_date, course_id, tee_time, weather, temperature, wind_condition, round_time, prize_money, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'upcoming')
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'finished')
     `;
     
     db.run(query, [round_name, round_date, course_id, tee_time, weather, temperature, wind_condition, round_time, prize_money], function(err) {
@@ -280,6 +280,12 @@ app.put('/api/admin/rounds/:id/status', (req, res) => {
     const roundId = req.params.id;
     const { status } = req.body;
     
+    // 유효한 상태값 검증
+    const validStatuses = ['upcoming', 'ongoing', 'finished'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ error: '유효하지 않은 상태값입니다.' });
+    }
+    
     const query = 'UPDATE rounds SET status = ? WHERE id = ?';
     
     db.run(query, [status, roundId], function(err) {
@@ -287,7 +293,27 @@ app.put('/api/admin/rounds/:id/status', (req, res) => {
             res.status(500).json({ error: err.message });
             return;
         }
+        if (this.changes === 0) {
+            res.status(404).json({ error: '라운딩을 찾을 수 없습니다.' });
+            return;
+        }
         res.json({ message: '라운딩 상태가 업데이트되었습니다.' });
+    });
+});
+
+// 모든 라운딩을 finished 상태로 업데이트 (새로 추가)
+app.put('/api/admin/rounds/status/finished-all', (req, res) => {
+    const query = "UPDATE rounds SET status = 'finished' WHERE status != 'finished'";
+    
+    db.run(query, [], function(err) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({ 
+            message: `${this.changes}개의 라운딩이 완료 상태로 변경되었습니다.`,
+            updated_count: this.changes
+        });
     });
 });
 
@@ -333,37 +359,6 @@ app.post('/api/admin/news', (req, res) => {
         res.json({ id: this.lastID, message: '뉴스가 추가되었습니다.' });
     });
 });
-
-// 서버 시작 - 클라우드타입용 수정
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🏌️‍♂️ HBL 골프 클럽 API 서버가 포트 ${PORT}에서 실행 중입니다.`);
-    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    
-    // 클라우드타입 환경 확인
-    if (process.env.NODE_ENV === 'production') {
-        console.log('🚀 클라우드타입 프로덕션 환경에서 실행 중입니다.');
-    } else {
-        console.log('🔧 로컬 개발 환경에서 실행 중입니다.');
-        console.log(`📱 로컬 접속: http://localhost:${PORT}`);
-    }
-    
-    initializeDatabase();
-});
-
-// 프로세스 종료 시 데이터베이스 연결 정리
-process.on('SIGINT', () => {
-    db.close((err) => {
-        if (err) {
-            console.error(err.message);
-        }
-        console.log('데이터베이스 연결이 종료되었습니다.');
-        process.exit(0);
-    });
-});
-
-module.exports = app;
-
-// server.js에 추가할 수동 초기화 API
 
 // 데이터베이스 상태 확인 API
 app.get('/api/admin/db-status', (req, res) => {
@@ -434,7 +429,7 @@ app.post('/api/admin/init-database', (req, res) => {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 
-        -- 라운딩 정보 테이블
+        -- 라운딩 정보 테이블 (기본값을 finished로 설정)
         CREATE TABLE IF NOT EXISTS rounds (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             round_name VARCHAR(100) NOT NULL,
@@ -446,7 +441,7 @@ app.post('/api/admin/init-database', (req, res) => {
             wind_condition VARCHAR(50),
             round_time VARCHAR(20),
             prize_money VARCHAR(50),
-            status VARCHAR(20) DEFAULT 'upcoming',
+            status VARCHAR(20) DEFAULT 'finished',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (course_id) REFERENCES golf_courses(id)
         );
@@ -518,13 +513,13 @@ app.post('/api/admin/init-database', (req, res) => {
         
         console.log('✅ 테이블 생성 완료');
         
-        // 2. 초기 데이터 삽입
-        insertInitialData(res);
+        // 2. 초기 데이터 삽입 후 기존 라운딩 상태 업데이트
+        insertInitialDataAndUpdateStatus(res);
     });
 });
 
-// 초기 데이터 삽입 함수
-function insertInitialData(res) {
+// 초기 데이터 삽입 및 라운딩 상태 업데이트 함수
+function insertInitialDataAndUpdateStatus(res) {
     console.log('📝 초기 데이터 삽입 시작...');
     
     const insertQueries = [
@@ -542,7 +537,7 @@ function insertInitialData(res) {
         ('아라미르CC', '경상남도', '18홀', 72, 6600),
         ('양산CC', '경상남도 양산', '18홀', 72, 6400)`,
         
-        // 라운딩 정보 삽입
+        // 라운딩 정보 삽입 (모두 finished 상태로)
         `INSERT OR IGNORE INTO rounds (round_name, round_date, course_id, tee_time, weather, temperature, wind_condition, round_time, prize_money, status) VALUES
         ('스톤게이트CC 라운딩', '2025-06-06', 1, '06:05', '맑음', 24, '약함', '4시간 30분', '1000원빵', 'finished'),
         ('밀양 에스파크 라운딩', '2025-05-11', 2, '13:35', '맑음', 22, '약함', '4시간 30분', '1000원빵', 'finished'),
@@ -580,20 +575,60 @@ function insertInitialData(res) {
             completed++;
             
             if (completed === total) {
-                if (hasError) {
-                    res.status(500).json({ 
-                        error: '일부 데이터 삽입 실패',
-                        message: '로그를 확인하세요'
-                    });
-                } else {
-                    console.log('🎉 모든 초기 데이터 삽입 완료!');
-                    res.json({ 
-                        message: '데이터베이스 초기화가 완료되었습니다!',
-                        tablesCreated: true,
-                        dataInserted: true
-                    });
-                }
+                // 모든 라운딩을 finished 상태로 업데이트
+                db.run("UPDATE rounds SET status = 'finished' WHERE status != 'finished'", function(updateErr) {
+                    if (updateErr) {
+                        console.error('라운딩 상태 업데이트 오류:', updateErr.message);
+                        hasError = true;
+                    } else {
+                        console.log(`✅ ${this.changes}개의 라운딩 상태가 finished로 업데이트되었습니다.`);
+                    }
+                    
+                    if (hasError) {
+                        res.status(500).json({ 
+                            error: '일부 데이터 삽입 실패',
+                            message: '로그를 확인하세요'
+                        });
+                    } else {
+                        console.log('🎉 모든 초기 데이터 삽입 및 상태 업데이트 완료!');
+                        res.json({ 
+                            message: '데이터베이스 초기화가 완료되었습니다!',
+                            tablesCreated: true,
+                            dataInserted: true,
+                            roundsUpdated: true
+                        });
+                    }
+                });
             }
         });
     });
 }
+
+// 서버 시작 - 클라우드타입용 수정
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🏌️‍♂️ HBL 골프 클럽 API 서버가 포트 ${PORT}에서 실행 중입니다.`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    
+    // 클라우드타입 환경 확인
+    if (process.env.NODE_ENV === 'production') {
+        console.log('🚀 클라우드타입 프로덕션 환경에서 실행 중입니다.');
+    } else {
+        console.log('🔧 로컬 개발 환경에서 실행 중입니다.');
+        console.log(`📱 로컬 접속: http://localhost:${PORT}`);
+    }
+    
+    initializeDatabase();
+});
+
+// 프로세스 종료 시 데이터베이스 연결 정리
+process.on('SIGINT', () => {
+    db.close((err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        console.log('데이터베이스 연결이 종료되었습니다.');
+        process.exit(0);
+    });
+});
+
+module.exports = app;

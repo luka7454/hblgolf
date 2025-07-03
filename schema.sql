@@ -1,4 +1,4 @@
--- HBL 골프 클럽 데이터베이스 스키마
+-- HBL 골프 클럽 데이터베이스 스키마 (수정 버전)
 
 -- 1. 선수 정보 테이블
 CREATE TABLE players (
@@ -30,7 +30,7 @@ CREATE TABLE golf_courses (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. 라운딩 정보 테이블
+-- 3. 라운딩 정보 테이블 (기본 상태를 finished로 변경)
 CREATE TABLE rounds (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     round_name VARCHAR(100) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE rounds (
     wind_condition VARCHAR(50),
     round_time VARCHAR(20),
     prize_money VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'upcoming', -- upcoming, ongoing, finished
+    status VARCHAR(20) DEFAULT 'finished', -- 기본값을 finished로 변경
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (course_id) REFERENCES golf_courses(id)
 );
@@ -121,7 +121,7 @@ INSERT INTO golf_courses (name, location, course_type, par, yardage) VALUES
 ('아라미르CC', '경상남도', '18홀', 72, 6600),
 ('양산CC', '경상남도 양산', '18홀', 72, 6400);
 
--- 라운딩 정보 입력
+-- 라운딩 정보 입력 (모두 finished 상태로)
 INSERT INTO rounds (round_name, round_date, course_id, tee_time, weather, temperature, wind_condition, round_time, prize_money, status) VALUES
 ('스톤게이트CC 라운딩', '2025-06-06', 1, '06:05', '맑음', 24, '약함', '4시간 30분', '1000원빵', 'finished'),
 ('밀양 에스파크 라운딩', '2025-05-11', 2, '13:35', '맑음', 22, '약함', '4시간 30분', '1000원빵', 'finished'),
@@ -181,3 +181,6 @@ CREATE INDEX idx_scores_player_id ON scores(player_id);
 CREATE INDEX idx_rounds_date ON rounds(round_date);
 CREATE INDEX idx_hole_scores_score_id ON hole_scores(score_id);
 CREATE INDEX idx_equipment_player_id ON equipment(player_id);
+
+-- 기존 라운딩 상태를 finished로 업데이트하는 명령어 (이미 데이터가 있는 경우)
+UPDATE rounds SET status = 'finished' WHERE status = 'upcoming';
