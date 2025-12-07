@@ -196,6 +196,8 @@
         .player-score-entry { border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.03); }
         .player-score-entry h4 { margin-bottom: 8px; }
         .score-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+        .hole-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 6px; margin-top: 6px; }
+        .hole-grid label { font-size: 11px; color: var(--muted); }
 
         .modal-backdrop {
             position: fixed; inset: 0;
@@ -793,6 +795,12 @@
                 const container = document.getElementById('player-scores-container');
                 container.innerHTML = '';
                 players.forEach((player, index) => {
+                    const holes = Array.from({ length: 18 }, (_, i) => `
+                        <div>
+                            <label>${i + 1}H</label>
+                            <input type="number" name="hole_${player.id}_${i + 1}" placeholder="0" min="1" max="10">
+                        </div>
+                    `).join('');
                     const div = document.createElement('div');
                     div.className = 'player-score-entry';
                     div.innerHTML = `
@@ -817,6 +825,12 @@
                             <div class="form-group">
                                 <label>니어리스트</label>
                                 <input type="number" name="nearest_count_${player.id}" placeholder="0" min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>홀별 스코어 (18홀)</label>
+                            <div class="hole-grid">
+                                ${holes}
                             </div>
                         </div>
                         <div class="form-group">
@@ -851,6 +865,10 @@
                     const totalScore = document.querySelector(`input[name="total_score_${player.id}"]`);
                     const ranking = document.querySelector(`input[name="ranking_${player.id}"]`);
                     if (totalScore && totalScore.value && ranking && ranking.value) {
+                        const holeScores = Array.from({ length: 18 }, (_, i) => {
+                            const val = document.querySelector(`input[name="hole_${player.id}_${i + 1}"]`)?.value;
+                            return val ? parseInt(val) : null;
+                        });
                         scores.push({
                             round_id: parseInt(roundId),
                             player_id: player.id,
@@ -859,6 +877,7 @@
                             birdie_count: parseInt(document.querySelector(`input[name="birdie_count_${player.id}"]`).value) || 0,
                             eagle_count: parseInt(document.querySelector(`input[name="eagle_count_${player.id}"]`).value) || 0,
                             nearest_count: parseInt(document.querySelector(`input[name="nearest_count_${player.id}"]`).value) || 0,
+                            hole_scores: holeScores,
                             notes: document.querySelector(`textarea[name="notes_${player.id}"]`).value || ''
                         });
                     }

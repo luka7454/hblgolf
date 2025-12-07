@@ -181,6 +181,24 @@
         th, td { padding: 12px 10px; text-align: center; }
         th { background: rgba(255, 255, 255, 0.05); }
         tr { border-bottom: 1px solid var(--border); }
+        tr.clickable { cursor: pointer; }
+
+        .details-row { background: rgba(255, 255, 255, 0.02); }
+        .details-cell { padding: 0 0 12px 0; }
+        .hole-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 6px;
+            padding: 10px 12px 2px;
+        }
+        .hole-chip {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 6px;
+            background: rgba(255, 255, 255, 0.04);
+            font-size: 12px;
+        }
+        .row-toggle { color: var(--muted); font-size: 12px; }
 
         .rank-badge {
             padding: 6px 10px;
@@ -325,6 +343,7 @@
 
         let rounds = [];
         let currentRoundId = null;
+        let currentScores = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             attachEvents();
@@ -398,8 +417,9 @@
                     fetch(`${API_BASE_URL}/api/rounds/${roundId}/scores`).then(r => r.ok ? r.json() : [])
                 ]);
 
+                currentScores = scoresRes || [];
                 renderStats(statsRes, round);
-                renderScores(scoresRes);
+                renderScores(currentScores);
             } catch (err) {
                 console.warn('라운드 세부 로드 실패:', err);
                 renderStats({}, {});
@@ -435,20 +455,36 @@
                 return;
             }
 
-            recordsBody.innerHTML = scores.slice(0, 20).map(score => `
-                <tr>
-                    <td><span class="rank-badge">#${score.ranking}</span></td>
-                    <td>
-                        <div class="row">
-                            <img class="avatar" src="${score.photo_url || 'images/jay.png'}" alt="${score.name}">
-                            <span>${score.name}</span>
-                        </div>
-                    </td>
-                    <td>${score.total_score ?? '-'}</td>
-                    <td>${score.birdie_count ?? 0}</td>
-                    <td>${score.nearest_count ?? 0}</td>
-                </tr>
-            `).join('');
+            recordsBody.innerHTML = scores.slice(0, 20).map(score => {
+                const holes = score.hole_scores && score.hole_scores.length ? score.hole_scores : null;
+                const holeHtml = holes ? holes.map((h, idx) => `<div class="hole-chip">${idx + 1}H · ${h || '-'}</div>`).join('') : '<div class="muted">홀별 스코어가 없습니다.</div>';
+                return `
+                    <tr class="clickable" onclick="toggleHoleDetails('${score.player_id || score.id || score.name}')">
+                        <td><span class="rank-badge">#${score.ranking}</span></td>
+                        <td>
+                            <div class="row">
+                                <img class="avatar" src="${score.photo_url || 'images/jay.png'}" alt="${score.name}">
+                                <span>${score.name}</span>
+                            </div>
+                            <div class="row-toggle">클릭하여 홀별 스코어 보기</div>
+                        </td>
+                        <td>${score.total_score ?? '-'}</td>
+                        <td>${score.birdie_count ?? 0}</td>
+                        <td>${score.nearest_count ?? 0}</td>
+                    </tr>
+                    <tr class="details-row" id="details-${score.player_id || score.id || score.name}" style="display:none;">
+                        <td colspan="5" class="details-cell">
+                            <div class="hole-grid">${holeHtml}</div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleHoleDetails(id) {
+            const row = document.getElementById(`details-${id}`);
+            if (!row) return;
+            row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
         }
 
         function formatDate(dateString) {
