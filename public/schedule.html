@@ -3,562 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBL 골프 클럽 - 투어 스케줄</title>
+    <title>HBL 골프 클럽 | 일정</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Noto Sans KR', sans-serif;
+        :root {
+            --bg: #04090f;
+            --panel: rgba(16, 31, 42, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e9f1f6;
+            --muted: #9fb3c2;
+            --accent: #4ce2b1;
+            --accent-2: #6cb7ff;
+            --radius: 16px;
         }
-        
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(76, 226, 177, 0.12), transparent 25%),
+                radial-gradient(circle at 80% 0%, rgba(108, 183, 255, 0.12), transparent 28%),
+                linear-gradient(160deg, #03060c 0%, #06121a 40%, #081d21 75%, #04090f 100%);
+            color: var(--text);
+            font-family: 'Manrope', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+            padding: 0 20px 40px;
         }
-        
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem 2rem;
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
+
+        a { color: inherit; text-decoration: none; }
+
+        header {
+            position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(4, 9, 15, 0.9), rgba(4, 9, 15, 0.6));
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
         }
-        
-        .logo-text {
-            font-family: Arial, sans-serif;
-            font-weight: 900;
-            font-size: 32px;
-            letter-spacing: -1px;
-            color: #000;
-        }
-        
-        .logo {
-            position: absolute;
-            left: 2rem;
-        }
-        
-        .nav-menu {
+
+        .topbar {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px 0;
             display: flex;
-            list-style: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
-        
-        .nav-menu li {
-            margin-left: 2rem;
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #23b47e, #0f5f4f);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
         }
-        
-        .nav-menu a:hover {
-            color: #0a5e2f;
-            border-bottom: 2px solid #0a5e2f;
-        }
-        
-        .active {
-            color: #0a5e2f !important;
-            border-bottom: 2px solid #0a5e2f;
-        }
-        
-        .menu-toggle {
-            display: none;
+
+        .brand-text {
+            display: flex;
             flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-text strong { font-size: 18px; letter-spacing: -0.02em; }
+        .brand-text span { color: var(--muted); font-size: 12px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        nav a {
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: var(--muted);
+            font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        nav a.active,
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+        }
+
+        .ghost-btn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: transparent;
             cursor: pointer;
-            position: absolute;
-            right: 2rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
         }
-        
-        .bar {
-            width: 25px;
-            height: 3px;
-            background-color: #333;
-            margin: 3px 0;
-            transition: all 0.3s ease;
+
+        .ghost-btn:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-1px); }
+
+        .nav-toggle {
+            display: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
-        
-        .main-content {
-            margin-top: 85px;
-            padding: 20px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
+
+        main {
+            max-width: 1100px;
+            margin: 24px auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
-        
-        /* 스케줄 페이지 스타일 */
-        .page-title {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #0a5e2f;
-            color: #0a5e2f;
+
+        .hero {
+            border-radius: 22px;
+            padding: clamp(18px, 3vw, 26px);
+            background: linear-gradient(135deg, rgba(76, 226, 177, 0.12), rgba(8, 29, 33, 0.85));
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
         }
-        
-        .schedule-controls {
+
+        .hero h1 { font-size: clamp(26px, 4vw, 34px); letter-spacing: -0.04em; margin-bottom: 8px; }
+        .hero p { color: var(--muted); line-height: 1.5; }
+
+        .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .chip {
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .pill-input {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        .card {
+            padding: 16px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        .card-head {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
-        
-        .year-selector {
-            display: flex;
+
+        .status {
+            display: inline-flex;
             align-items: center;
-        }
-        
-        .year-label {
-            font-size: 20px;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-        
-        .year-select {
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            background-color: white;
-        }
-        
-        .download-btn {
-            background-color: #0a5e2f;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        
-        .download-btn i {
-            margin-right: 8px;
-        }
-        
-        .month-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .month-tab {
-            padding: 12px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-            position: relative;
-            top: 1px;
-        }
-        
-        .month-tab.active {
-            background-color: white;
-            border-bottom: 1px solid white;
-            font-weight: bold;
-            color: #0a5e2f;
-        }
-        
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 50px;
-        }
-        
-        .schedule-table th {
-            background-color: #f0f0f0;
-            padding: 15px;
-            text-align: left;
-            border-bottom: 2px solid #ddd;
-        }
-        
-        .schedule-table td {
-            padding: 20px 15px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-        }
-        
-        .tournament-row {
-            transition: background-color 0.2s;
-        }
-        
-        .tournament-row:hover {
-            background-color: #f9f9f9;
-            cursor: pointer;
-        }
-        
-        .tournament-row.finished {
-            background-color: #f5f5f5;
-            color: #777;
-        }
-        
-        .tournament-row.current {
-            background-color: #e6f7e6;
-        }
-        
-        .tournament-dates {
-            font-size: 15px;
-            white-space: nowrap;
-            width: 15%;
-        }
-        
-        .tournament-name {
-            font-weight: bold;
-            font-size: 16px;
-            width: 30%;
-        }
-        
-        .tournament-details {
-            width: 20%;
-            font-size: 14px;
-        }
-        
-        .tournament-prize {
-            text-align: right;
-            font-weight: bold;
-            font-size: 15px;
-            width: 15%;
-        }
-        
-        .tournament-champion {
-            width: 20%;
-            font-size: 14px;
-        }
-        
-        .tournament-status {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 10px;
             font-size: 12px;
-            margin-right: 10px;
-            font-weight: normal;
+            letter-spacing: 0.03em;
         }
-        
-        .status-finished {
-            background-color: #f0f0f0;
-            color: #666;
+
+        .status.upcoming { background: rgba(108, 183, 255, 0.15); color: #b7d9ff; }
+        .status.finished { background: rgba(255, 255, 255, 0.08); color: var(--muted); }
+
+        .title { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+        .muted { color: var(--muted); font-size: 14px; margin-top: 6px; }
+        .meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .meta-chip {
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-weight: 600;
         }
-        
-        .status-ongoing {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .status-upcoming {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        .no-tournaments {
-            text-align: center;
-            padding: 50px 0;
-            color: #666;
-            font-size: 18px;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @media (max-width: 992px) {
-            .schedule-table th, .schedule-table td {
-                padding: 15px 10px;
-            }
-            
-            .tournament-dates {
-                width: 18%;
-            }
-            
-            .tournament-name {
-                width: 40%;
-            }
-            
-            .tournament-details {
-                width: 22%;
-            }
-            
-            .tournament-prize {
-                width: 20%;
-            }
-            
-            .tournament-champion {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .nav-menu {
+
+        @media (max-width: 920px) {
+            nav {
                 position: fixed;
-                left: -100%;
                 top: 70px;
-                flex-direction: column;
-                background-color: #fff;
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
-                padding: 1rem 0;
-            }
-            
-            .nav-menu.active {
                 left: 0;
+                right: 0;
+                padding: 14px;
+                background: rgba(4, 9, 15, 0.95);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--border);
+                transform: translateY(-120%);
+                transition: transform 0.2s ease;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
             }
-            
-            .nav-menu li {
-                margin: 1rem 0;
-            }
-            
-            .menu-toggle {
-                display: flex;
-            }
-            
-            .header {
-                justify-content: flex-start;
-                padding-left: 1rem;
-            }
-            
-            .schedule-controls {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .year-selector {
-                margin-bottom: 15px;
-            }
-            
-            .month-tab {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-            
-            .schedule-table {
-                display: block;
-                overflow-x: auto;
-            }
-            
-            .tournament-details {
-                display: none;
-            }
-            
-            .tournament-dates {
-                width: 30%;
-            }
-            
-            .tournament-name {
-                width: 45%;
-            }
-            
-            .tournament-prize {
-                width: 25%;
-            }
+
+            nav.open { transform: translateY(0); }
+            .nav-toggle { display: inline-flex; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-text">HBL</div>
-        </div>
-        
-       <ul class="nav-menu">
-    <li><a href="main.html">ABOUT HBL</a></li>
-    <li><a href="schedule.html">일정</a></li>
-    <li><a href="tournament-records.html">리더보드</a></li>
-    <li><a href="tournament-records.html">기록</a></li>
-    <li><a href="players.html">선수정보</a></li>
-    <li><a href="#">이벤트</a></li>
-</ul>
-        
-        <div class="menu-toggle">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+    <header>
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-mark">HBL</div>
+                <div class="brand-text">
+                    <strong>HBL Golf Club</strong>
+                    <span>Members schedule</span>
+                </div>
+            </div>
+            <nav id="navMenu">
+                <a href="main.html">대시보드</a>
+                <a href="schedule.html" class="active">일정</a>
+                <a href="tournament-records.html">기록</a>
+                <a href="players.html">선수</a>
+            </nav>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="ghost-btn" id="logoutBtn" type="button">로그아웃</button>
+                <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기">☰</button>
+            </div>
         </div>
     </header>
-    
-    <div class="main-content">
-        <h1 class="page-title">HBL 투어 스케줄</h1>
-        
-        <div class="schedule-controls">
-            <div class="year-selector">
-                <span class="year-label">2025 시즌</span>
-                <select class="year-select">
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                </select>
+
+    <main>
+        <section class="hero">
+            <h1>2025 시즌 라운드 일정</h1>
+            <p>이번 시즌 확정된 라운드를 한 눈에 확인하세요. 코스, 티타임, 우승자를 빠르게 확인할 수 있습니다.</p>
+            <div class="chips">
+                <span class="chip">확정 일정 4건</span>
+                <span class="chip">주요 코스: 스톤게이트, 발리오스</span>
             </div>
-            
-            <button class="download-btn">
-                <i>📥</i> 시즌 일정 다운로드
-            </button>
-        </div>
-        
-        <div class="month-tabs">
-            <div class="month-tab active" data-month="all">전체</div>
-            <div class="month-tab" data-month="01">1월</div>
-            <div class="month-tab" data-month="02">2월</div>
-            <div class="month-tab" data-month="03">3월</div>
-            <div class="month-tab" data-month="04">4월</div>
-            <div class="month-tab" data-month="05">5월</div>
-            <div class="month-tab" data-month="06">6월</div>
-            <div class="month-tab" data-month="07">7월</div>
-            <div class="month-tab" data-month="08">8월</div>
-            <div class="month-tab" data-month="09">9월</div>
-            <div class="month-tab" data-month="10">10월</div>
-            <div class="month-tab" data-month="11">11월</div>
-            <div class="month-tab" data-month="12">12월</div>
-        </div>
-        
-        <div class="tab-content active" id="all-months">
-            <table class="schedule-table">
-                <thead>
-                    <tr>
-                        <th>날짜</th>
-                        <th>대회명</th>
-                        <th>장소</th>
-                        <th>총상금</th>
-                        <th>우승자</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    
-                    <!-- 3월 대회 -->
-                    <tr class="tournament-row finished">
-                        <td class="tournament-dates">03.19</td>
-                        <td class="tournament-name">
-                            <span class="tournament-status status-finished">종료</span>
-                            <a href="tournament-records.html">2025 HBL 양산cc </a>
-                        </td>
-                        <td class="tournament-details">양산cc</td>
-                        <td class="tournament-prize">1000원빵</td>
-                        <td class="tournament-champion">김상현</td>
-                    </tr>
-                    
-                
-                    
-                    <!-- 4월 대회 -->
-                    <tr class="tournament-row finished">
-                        <td class="tournament-dates">04.04</td>
-                        <td class="tournament-name">
-                            <span class="tournament-status status-finished">종료</span>
-                            <a href="tournament-records.html">2025 HBL 아라미르cc </a>
-                        </td>
-                        <td class="tournament-details">아라미르cc</td>
-                        <td class="tournament-prize">1000원빵</td>
-                        <td class="tournament-champion">김종혁</td>
-                    </tr>
-                    
-                    <!-- 5월 대회 -->
-                    <tr class="tournament-row finished">
-                        <td class="tournament-dates">05.11</td>
-                        <td class="tournament-name">
-                            <span class="tournament-status status-finished">종료</span>
-                            <a href="tournament-records.html">2025 HBL 밀양 에스파크cc </a>
-                        </td>
-                        <td class="tournament-details"> HBL 밀양 에스파크cc</td>
-                        <td class="tournament-prize">1000원빵</td>
-                        <td class="tournament-champion">김종혁</td>
-                    </tr>
-                    
-                       <!-- 6월 대회 -->
-                       <tr class="tournament-row current">
-                        <td class="tournament-dates">06.06</td>
-                        <td class="tournament-name">
-                            <span class="tournament-status status-finished">종료</span>
-                            <a href="tournament-records.html">2025 HBL 스톤게이트cc </a>
-                        </td>
-                        <td class="tournament-details"> HBL 스톤게이트cc</td>
-                        <td class="tournament-prize">1000원빵</td>
-                        <td class="tournament-champion">조영복</td>
-                    </tr>
-                   
-                    
-                    
-                </tbody>
-            </table>
-        </div>
-        
-                               
-    
+            <div class="filters">
+                <select class="pill-input" id="yearSelect">
+                    <option>2025</option>
+                    <option>2024</option>
+                    <option>2023</option>
+                </select>
+                <input class="pill-input" id="searchInput" placeholder="코스나 우승자 검색" />
+            </div>
+        </section>
+
+        <section class="grid" id="scheduleGrid">
+            <!-- cards rendered by script -->
+        </section>
+    </main>
+
     <script>
-        // 모바일 메뉴 토글 기능
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+        const navMenu = document.getElementById('navMenu');
+        const navToggle = document.getElementById('navToggle');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const scheduleGrid = document.getElementById('scheduleGrid');
+        const searchInput = document.getElementById('searchInput');
+        const yearSelect = document.getElementById('yearSelect');
+
+        const schedule = [
+            { date: '2025-03-19', course: '용산 CC', prize: '₩10,000,000', champion: '김기현', status: 'finished', label: '정기 라운드' },
+            { date: '2025-04-04', course: '나라미르 CC', prize: '₩10,000,000', champion: '김종형', status: 'finished', label: '정기 라운드' },
+            { date: '2025-05-11', course: '발리오스 CC', prize: '₩10,000,000', champion: '김종형', status: 'finished', label: '정기 라운드' },
+            { date: '2025-06-06', course: '스톤게이트 CC', prize: '₩10,000,000', champion: '조영복', status: 'upcoming', label: '정기 라운드' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSchedule();
+            attachEvents();
         });
-        
-        // 월 탭 전환 기능
-        const monthTabs = document.querySelectorAll('.month-tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        
-        monthTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                // 탭 활성화 상태 변경
-                monthTabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // 콘텐츠 전환
-                const month = this.getAttribute('data-month');
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                if (month === 'all') {
-                    document.getElementById('all-months').classList.add('active');
-                } else {
-                    // 안전하게 요소 존재 여부 확인 후 처리
-                    const monthContent = document.getElementById(`month-${month}`);
-                    if (monthContent) {
-                        monthContent.classList.add('active');
-                    } else {
-                        // 해당 월 콘텐츠가 없으면 전체 탭 보여주기
-                        document.getElementById('all-months').classList.add('active');
-                        alert(`${month}월 대회 정보를 준비 중입니다. 전체 일정을 표시합니다.`);
-                    }
-                }
+
+        function attachEvents() {
+            navToggle?.addEventListener('click', () => navMenu.classList.toggle('open'));
+            navMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('open')));
+            logoutBtn?.addEventListener('click', handleLogout);
+            searchInput.addEventListener('input', renderSchedule);
+            yearSelect.addEventListener('change', renderSchedule);
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('hbl_authenticated');
+            sessionStorage.removeItem('hbl_auth_time');
+            window.location.href = 'index.html';
+        }
+
+        function renderSchedule() {
+            const keyword = searchInput.value.trim().toLowerCase();
+            const selectedYear = yearSelect.value;
+
+            const filtered = schedule.filter(item => {
+                const matchesYear = item.date.startsWith(selectedYear);
+                const text = `${item.course} ${item.champion} ${item.label}`.toLowerCase();
+                const matchesKeyword = !keyword || text.includes(keyword);
+                return matchesYear && matchesKeyword;
             });
-        });
-        
-        // 연도 선택 변경 시 이벤트
-        const yearSelect = document.querySelector('.year-select');
-        yearSelect.addEventListener('change', function() {
-            // 실제 사이트에서는 여기에 AJAX 요청이나 페이지 리로드 로직이 들어갈 수 있습니다.
-            alert(`${this.value}년 일정을 불러옵니다.`);
-        });
-        
-        // 대회 행 클릭 시 상세 페이지로 이동
-        const tournamentRows = document.querySelectorAll('.tournament-row');
-        tournamentRows.forEach(row => {
-            row.addEventListener('click', function() {
-                const tournamentName = this.querySelector('.tournament-name').textContent.trim();
-                // 실제 사이트에서는 대회 상세 페이지로 이동하는 로직이 들어갈 수 있습니다.
-                alert(`${tournamentName} 상세 페이지로 이동합니다.`);
-            });
-        });
+
+            if (filtered.length === 0) {
+                scheduleGrid.innerHTML = '<div class="card"><div class="muted">해당 조건의 일정이 없습니다.</div></div>';
+                return;
+            }
+
+            scheduleGrid.innerHTML = filtered.map(item => `
+                <article class="card">
+                    <div class="card-head">
+                        <span class="title">${item.course}</span>
+                        <span class="status ${item.status}">${item.status === 'upcoming' ? '예정' : '종료'}</span>
+                    </div>
+                    <div class="muted">${formatDate(item.date)} · ${item.label}</div>
+                    <div class="meta-row">
+                        <span class="meta-chip">상금 ${item.prize}</span>
+                        <span class="meta-chip">우승자 ${item.champion}</span>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            const weekday = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+            return `${y}.${m}.${d} (${weekday})`;
+        }
     </script>
 </body>
 </html>

@@ -343,9 +343,39 @@
             color: var(--muted);
         }
 
+        .round-duo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        .round-block {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .round-block.secondary {
+            background: linear-gradient(135deg, rgba(108, 183, 255, 0.08), rgba(4, 9, 15, 0.6));
+        }
+
+        .round-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            font-size: 12px;
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+        }
+
         .round-details {
             display: grid;
-            gap: 12px;
+            gap: 10px;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             margin-top: 8px;
         }
@@ -402,9 +432,25 @@
             letter-spacing: -0.01em;
         }
 
+        .leader .meta {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
         .leader .score {
             color: var(--accent);
             font-weight: 800;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .leader .score span {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .status {
@@ -527,22 +573,48 @@
                     <h3>다가오는 라운드</h3>
                     <span id="round-label" style="color:var(--muted); font-size:13px;">-</span>
                 </div>
-                <div class="round-details">
-                    <div class="round-card">
-                        <label>라운드 일시</label>
-                        <strong id="round-date">-</strong>
+                <div class="round-duo">
+                    <div class="round-block">
+                        <div class="round-tag">Next</div>
+                        <div class="round-details">
+                            <div class="round-card">
+                                <label>라운드 일시</label>
+                                <strong id="round-date">-</strong>
+                            </div>
+                            <div class="round-card">
+                                <label>티타임</label>
+                                <strong id="round-time">-</strong>
+                            </div>
+                            <div class="round-card">
+                                <label>코스</label>
+                                <strong id="round-course">-</strong>
+                            </div>
+                            <div class="round-card">
+                                <label>참가 인원</label>
+                                <strong id="round-participants">-</strong>
+                            </div>
+                        </div>
                     </div>
-                    <div class="round-card">
-                        <label>티타임</label>
-                        <strong id="round-time">-</strong>
-                    </div>
-                    <div class="round-card">
-                        <label>코스</label>
-                        <strong id="round-course">-</strong>
-                    </div>
-                    <div class="round-card">
-                        <label>참가 인원</label>
-                        <strong id="round-participants">-</strong>
+                    <div class="round-block secondary">
+                        <div class="round-tag">최근 라운드</div>
+                        <div class="round-details">
+                            <div class="round-card">
+                                <label>라운드 일시</label>
+                                <strong id="recent-date">-</strong>
+                            </div>
+                            <div class="round-card">
+                                <label>티타임</label>
+                                <strong id="recent-time">-</strong>
+                            </div>
+                            <div class="round-card">
+                                <label>코스</label>
+                                <strong id="recent-course">-</strong>
+                            </div>
+                            <div class="round-card">
+                                <label>참가 인원</label>
+                                <strong id="recent-participants">-</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </article>
@@ -584,12 +656,16 @@
         const roundTimeEl = document.getElementById('round-time');
         const roundCourseEl = document.getElementById('round-course');
         const roundParticipantsEl = document.getElementById('round-participants');
+        const recentDateEl = document.getElementById('recent-date');
+        const recentTimeEl = document.getElementById('recent-time');
+        const recentCourseEl = document.getElementById('recent-course');
+        const recentParticipantsEl = document.getElementById('recent-participants');
 
         document.addEventListener('DOMContentLoaded', () => {
             initNav();
             initLogout();
             loadNews();
-            loadLatestRoundInfo();
+            loadRounds();
             loadRankings();
         });
 
@@ -642,48 +718,69 @@
             `).join('');
         }
 
-        async function loadLatestRoundInfo() {
+        async function loadRounds() {
             try {
                 const res = await fetch(`${API_BASE_URL}/api/rounds`);
                 if (!res.ok) throw new Error('라운드 로드 실패');
                 const rounds = await res.json();
-                const latest = rounds?.[0];
 
-                if (!latest) {
+                const nextRound = rounds?.[0];
+                const recentRound = rounds?.[1];
+
+                if (!nextRound) {
                     applyRoundFallback();
                     return;
                 }
 
-                const statsRes = await fetch(`${API_BASE_URL}/api/rounds/${latest.id}/stats`);
-                const stats = await statsRes.json();
+                const [nextStats, recentStats] = await Promise.all([
+                    fetch(`${API_BASE_URL}/api/rounds/${nextRound.id}/stats`).then(r => r.json()).catch(() => ({})),
+                    recentRound ? fetch(`${API_BASE_URL}/api/rounds/${recentRound.id}/stats`).then(r => r.json()).catch(() => ({})) : [{}]
+                ]);
 
-                bindRound(latest, stats);
+                bindRound(nextRound, nextStats, recentRound, recentStats);
             } catch (err) {
                 console.warn('라운드 API 실패, fallback 사용:', err);
                 applyRoundFallback();
             }
         }
 
-        function bindRound(round, stats = {}) {
-            const dateText = formatDate(round.round_date);
-            const timeText = formatTime(round.tee_time);
-            const participants = stats.participant_count ?? '-';
-            const course = round.course_name || '미정';
+        function bindRound(nextRound, nextStats = {}, recentRound, recentStats = {}) {
+            const nextDateText = formatDate(nextRound.round_date);
+            const nextTimeText = formatTime(nextRound.tee_time);
+            const nextParticipants = nextStats.participant_count ?? '-';
+            const nextCourse = nextRound.course_name || '미정';
 
-            chipDate.textContent = dateText;
-            chipTime.textContent = timeText || '미정';
-            chipCourse.textContent = course;
+            chipDate.textContent = nextDateText;
+            chipTime.textContent = nextTimeText || '미정';
+            chipCourse.textContent = nextCourse;
 
-            metricParticipants.textContent = `${participants}명`;
-            metricDate.textContent = dateText;
-            metricCourse.textContent = course;
-            metricTime.textContent = timeText || '미정';
+            metricParticipants.textContent = `${nextParticipants}명`;
+            metricDate.textContent = nextDateText;
+            metricCourse.textContent = nextCourse;
+            metricTime.textContent = nextTimeText || '미정';
 
-            roundLabel.textContent = `${dateText} • ${course}`;
-            roundDateEl.textContent = dateText;
-            roundTimeEl.textContent = timeText || '미정';
-            roundCourseEl.textContent = course;
-            roundParticipantsEl.textContent = `${participants}명`;
+            roundLabel.textContent = `${nextDateText} • ${nextCourse}`;
+            roundDateEl.textContent = nextDateText;
+            roundTimeEl.textContent = nextTimeText || '미정';
+            roundCourseEl.textContent = nextCourse;
+            roundParticipantsEl.textContent = `${nextParticipants}명`;
+
+            if (recentRound) {
+                const recentDateText = formatDate(recentRound.round_date);
+                const recentTimeText = formatTime(recentRound.tee_time);
+                const recentParticipants = recentStats.participant_count ?? '-';
+                const recentCourse = recentRound.course_name || '미정';
+
+                recentDateEl.textContent = recentDateText;
+                recentTimeEl.textContent = recentTimeText || '미정';
+                recentCourseEl.textContent = recentCourse;
+                recentParticipantsEl.textContent = `${recentParticipants}명`;
+            } else {
+                recentDateEl.textContent = '-';
+                recentTimeEl.textContent = '-';
+                recentCourseEl.textContent = '-';
+                recentParticipantsEl.textContent = '-';
+            }
         }
 
         async function loadRankings() {
@@ -708,20 +805,29 @@
             rankingContainer.innerHTML = rankings.slice(0, 5).map((player, idx) => `
                 <div class="leader ${idx === 0 ? 'top' : ''}">
                     <img class="avatar" src="${player.photo_url || 'images/jay.png'}" alt="${player.name || 'player'}">
-                    <div class="name">${player.name || '이름 미정'}</div>
-                    <div class="score">${player.avg_score ? Math.round(player.avg_score) : 'N/A'}</div>
+                    <div>
+                        <div class="name">${player.name || '이름 미정'}</div>
+                        <div class="meta">평균 타수 ${player.avg_score ? Math.round(player.avg_score) : 'N/A'} · 승리 ${player.wins ?? 0}회</div>
+                    </div>
+                    <div class="score">${player.avg_score ? Math.round(player.avg_score) : 'N/A'}<span>총 타수</span></div>
                 </div>
             `).join('');
         }
 
         function applyRoundFallback() {
-            const round = {
+            const nextRound = {
                 round_date: '2025-06-06',
                 tee_time: '07:30',
                 course_name: '스톤게이트 CC'
             };
-            const stats = { participant_count: 24 };
-            bindRound(round, stats);
+            const recentRound = {
+                round_date: '2025-05-11',
+                tee_time: '07:40',
+                course_name: '발리오스 CC'
+            };
+            const nextStats = { participant_count: 24 };
+            const recentStats = { participant_count: 22 };
+            bindRound(nextRound, nextStats, recentRound, recentStats);
         }
 
         function getFallbackNews() {

@@ -3,895 +3,475 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBL 골프 클럽 - 라운딩 기록</title>
+    <title>HBL 골프 클럽 | 라운드 기록</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Noto Sans KR', sans-serif;
+        :root {
+            --bg: #04090f;
+            --panel: rgba(16, 31, 42, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e9f1f6;
+            --muted: #9fb3c2;
+            --accent: #4ce2b1;
+            --accent-2: #6cb7ff;
+            --radius: 16px;
         }
-        
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(76, 226, 177, 0.12), transparent 25%),
+                radial-gradient(circle at 80% 0%, rgba(108, 183, 255, 0.12), transparent 28%),
+                linear-gradient(160deg, #03060c 0%, #06121a 40%, #081d21 75%, #04090f 100%);
+            color: var(--text);
+            font-family: 'Manrope', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+            padding: 0 20px 40px;
         }
-        
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem 2rem;
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
+
+        a { color: inherit; text-decoration: none; }
+
+        header {
+            position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(4, 9, 15, 0.9), rgba(4, 9, 15, 0.6));
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
         }
-        
-        .logo-text {
-            font-family: Arial, sans-serif;
-            font-weight: 900;
-            font-size: 32px;
-            letter-spacing: -1px;
-            color: #000;
-        }
-        
-        .logo {
-            position: absolute;
-            left: 2rem;
-        }
-        
-        .nav-menu {
+
+        .topbar {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px 0;
             display: flex;
-            list-style: none;
-        }
-        
-        .nav-menu li {
-            margin-left: 2rem;
-        }
-        
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-menu a:hover {
-            color: #0a5e2f;
-            border-bottom: 2px solid #0a5e2f;
-        }
-        
-        .active {
-            color: #279b61 !important;
-            border-bottom: 2px solid #0a5e2f;
-        }
-        
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            position: absolute;
-            right: 2rem;
-        }
-        
-        .bar {
-            width: 25px;
-            height: 3px;
-            background-color: #333;
-            margin: 3px 0;
-            transition: all 0.3s ease;
-        }
-        
-        .main-content {
-            margin-top: 85px;
-            padding: 20px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* 라운딩 기록 페이지 스타일 */
-        .round-header {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 25px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
-        
-        .round-title {
-            flex: 1;
-            min-width: 300px;
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        .round-name {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #1a75cf;
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #23b47e, #0f5f4f);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
         }
-        
-        .round-date {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 5px;
+
+        .brand-text { display: flex; flex-direction: column; gap: 2px; }
+        .brand-text strong { font-size: 18px; letter-spacing: -0.02em; }
+        .brand-text span { color: var(--muted); font-size: 12px; }
+
+        nav { display: flex; align-items: center; gap: 18px; }
+        nav a {
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: var(--muted);
+            font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease;
         }
-        
-        .round-venue {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 5px;
+        nav a.active,
+        nav a:hover { background: rgba(255, 255, 255, 0.06); color: var(--text); }
+
+        .ghost-btn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: transparent;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
         }
-        
-        .round-weather {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
+        .ghost-btn:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-1px); }
+
+        .nav-toggle {
+            display: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
-        
-        .round-info {
-            flex: 0 0 auto;
-            min-width: 200px;
-            text-align: right;
+
+        main {
+            max-width: 1100px;
+            margin: 24px auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .hero {
+            border-radius: 22px;
+            padding: clamp(18px, 3vw, 26px);
+            background: linear-gradient(135deg, rgba(76, 226, 177, 0.12), rgba(8, 29, 33, 0.85));
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+        }
+        .hero h1 { font-size: clamp(26px, 4vw, 34px); letter-spacing: -0.04em; margin-bottom: 8px; }
+        .hero p { color: var(--muted); line-height: 1.5; }
+
+        .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+        .pill-input {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+        }
+
+        .panel {
+            padding: 16px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .panel-title { font-weight: 800; letter-spacing: -0.02em; }
+        .muted { color: var(--muted); font-size: 13px; }
+
+        .round-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .round-btn {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            cursor: pointer;
+        }
+        .round-btn.active { background: rgba(255, 255, 255, 0.1); }
+
+        .round-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
             margin-top: 10px;
         }
-        
-        .winner-info {
+        .stat-card {
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .stat-card .label { color: var(--muted); font-size: 13px; }
+        .stat-card .value { font-weight: 800; font-size: 18px; margin-top: 4px; }
+
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; color: var(--text); }
+        th, td { padding: 12px 10px; text-align: center; }
+        th { background: rgba(255, 255, 255, 0.05); }
+        tr { border-bottom: 1px solid var(--border); }
+
+        .rank-badge {
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            font-weight: 700;
+        }
+        .row {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-        }
-        
-        .winner-photo {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-            border: 3px solid #1a75cf;
-        }
-        
-        .winner-details {
-            text-align: left;
-        }
-        
-        .winner-label {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .winner-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #1a75cf;
-        }
-        
-        .round-selector {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .selector-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
-        .round-list {
-            display: flex;
-            flex-wrap: wrap;
             gap: 10px;
         }
-        
-        .round-btn {
-            padding: 10px 15px;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .round-btn:hover {
-            background-color: #e0e0e0;
-        }
-        
-        .round-btn.active {
-            background-color: #1a75cf;
-            color: white;
-            border-color: #1a75cf;
-        }
-        
-        .filter-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .year-filter {
-            display: flex;
-            align-items: center;
-        }
-        
-        .year-label {
-            margin-right: 10px;
-            font-weight: 500;
-        }
-        
-        .year-select {
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .search-box {
-            position: relative;
-            width: 250px;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .search-btn {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        .records-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 25px;
-        }
-        
-        .records-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .records-table th {
-            background-color: #f5f5f5;
-            padding: 12px 15px;
-            text-align: center;
-            border-bottom: 2px solid #ddd;
-            font-weight: 500;
-        }
-        
-        .records-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            text-align: center;
-        }
-        
-        .rank {
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .rank.first {
-            color: #ffd700;
-        }
-        
-        .rank.second {
-            color: #c0c0c0;
-        }
-        
-        .rank.third {
-            color: #cd7f32;
-        }
-        
-        .player-info {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
-        
-        .player-photo {
+        .avatar {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 12px;
             object-fit: cover;
-            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.1);
         }
-        
-        .player-name {
-            font-weight: 500;
-            text-align: left;
-        }
-        
-        .player-name a {
-            color: #1a75cf;
-            text-decoration: none;
-        }
-        
-        .player-name a:hover {
-            text-decoration: underline;
-        }
-        
-        .score {
-            font-weight: 600;
-            font-size: 16px;
-        }
-        
-        .score.best {
-            color: #e74c3c;
-        }
-        
-        .score.good {
-            color: #f39c12;
-        }
-        
-        .score.average {
-            color: #3498db;
-        }
-        
-        .score.poor {
-            color: #95a5a6;
-        }
-        
-        .handicap {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .net-score {
-            font-weight: bold;
-            color: #27ae60;
-        }
-        
-        .stats-summary {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-        }
-        
-        .stat-title {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        
-        .stat-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #1a75cf;
-        }
-        
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            font-size: 18px;
-            color: #666;
-        }
-        
-        .error {
-            text-align: center;
-            padding: 20px;
-            color: #e74c3c;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        
-        @media (max-width: 992px) {
-            .round-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .round-info {
-                margin-top: 20px;
-                text-align: left;
-            }
-            
-            .winner-info {
-                justify-content: flex-start;
-            }
-            
-            .filter-options {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .search-box {
-                margin-top: 15px;
-                width: 100%;
-            }
-            
-            .stats-summary {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .nav-menu {
+
+        .status { padding: 12px; border: 1px dashed var(--border); border-radius: 12px; text-align: center; color: var(--muted); }
+
+        @media (max-width: 920px) {
+            nav {
                 position: fixed;
-                left: -100%;
                 top: 70px;
-                flex-direction: column;
-                background-color: #fff;
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
-                padding: 1rem 0;
-            }
-            
-            .nav-menu.active {
                 left: 0;
+                right: 0;
+                padding: 14px;
+                background: rgba(4, 9, 15, 0.95);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--border);
+                transform: translateY(-120%);
+                transition: transform 0.2s ease;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
             }
-            
-            .nav-menu li {
-                margin: 1rem 0;
-            }
-            
-            .menu-toggle {
-                display: flex;
-            }
-            
-            .header {
-                justify-content: flex-start;
-                padding-left: 1rem;
-            }
-            
-            .records-container {
-                padding: 15px;
-            }
-            
-            .records-table {
-                display: block;
-                overflow-x: auto;
-            }
-            
-            .stats-summary {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .round-btn {
-                font-size: 12px;
-                padding: 8px 10px;
-            }
-            
-            .records-table th:nth-child(4),
-            .records-table td:nth-child(4),
-            .records-table th:nth-child(5),
-            .records-table td:nth-child(5) {
-                display: none;
-            }
+            nav.open { transform: translateY(0); }
+            .nav-toggle { display: inline-flex; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-text">HBL</div>
-        </div>
-        
-        <ul class="nav-menu">
-            <li><a href="main.html">ABOUT HBL</a></li>
-            <li><a href="schedule.html">일정</a></li>
-            <li><a href="tournament-records.html">리더보드</a></li>
-            <li><a href="tournament-records.html" class="active">기록</a></li>
-            <li><a href="players.html">선수정보</a></li>
-            <li><a href="#">이벤트</a></li>
-        </ul>
-        
-        <div class="menu-toggle">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+    <header>
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-mark">HBL</div>
+                <div class="brand-text">
+                    <strong>HBL Golf Club</strong>
+                    <span>Round records</span>
+                </div>
+            </div>
+            <nav id="navMenu">
+                <a href="main.html">대시보드</a>
+                <a href="schedule.html">일정</a>
+                <a href="tournament-records.html" class="active">기록</a>
+                <a href="players.html">선수</a>
+            </nav>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="ghost-btn" id="logoutBtn" type="button">로그아웃</button>
+                <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기">☰</button>
+            </div>
         </div>
     </header>
-    
-    <div class="main-content">
-        <!-- 라운딩 정보 헤더 -->
-        <div class="round-header" id="round-header">
-            <div class="loading">라운딩 정보를 불러오는 중...</div>
-        </div>
-        
-        <!-- 라운딩 선택 섹션 -->
-        <div class="round-selector">
-            <div class="filter-options">
-                <div class="year-filter">
-                    <span class="year-label">연도:</span>
-                    <select class="year-select" id="year-select">
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                    </select>
-                </div>
-                
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="골프장명 검색" id="search-input">
-                    <button class="search-btn" id="search-btn">🔍</button>
+
+    <main>
+        <section class="hero">
+            <h1>라운드 기록</h1>
+            <p>라운드별 우승자, 스코어, 평균 타수를 빠르게 조회하세요.</p>
+            <div class="filters">
+                <select class="pill-input" id="yearSelect">
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                </select>
+                <input class="pill-input" id="searchInput" placeholder="코스명, 라운드명 검색" />
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <div class="panel-title">라운드 목록</div>
+                    <div class="muted" id="roundCount">-</div>
                 </div>
             </div>
-            
-            <h2 class="selector-title">2025 라운딩 기록</h2>
-            <div class="round-list" id="round-list">
-                <div class="loading">라운딩 목록을 불러오는 중...</div>
+            <div id="roundButtons" class="round-list"></div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <div class="panel-title" id="roundTitle">라운드를 선택하세요</div>
+                    <div class="muted" id="roundMeta">-</div>
+                </div>
+                <div class="muted" id="winnerMeta"></div>
             </div>
-        </div>
-        
-        <!-- 라운딩 통계 및 기록 -->
-        <div class="records-container">
-            <div class="stats-summary" id="stats-summary">
-                <div class="loading">통계를 불러오는 중...</div>
+            <div class="round-summary" id="statsSummary">
+                <div class="status">라운드를 선택하면 상세 정보가 표시됩니다.</div>
             </div>
-            
-            <table class="records-table">
-                <thead>
-                    <tr>
-                        <th>순위</th>
-                        <th>선수</th>
-                        <th>스코어</th>
-                        <th>버디</th>
-                        <th>니어리스트</th>
-                    </tr>
-                </thead>
-                <tbody id="records-tbody">
-                    <tr>
-                        <td colspan="5" class="loading">스코어 기록을 불러오는 중...</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div id="round-review" style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; display: none;">
-                <h3 style="margin-bottom: 10px; color: #333;">라운딩 후기</h3>
-                <p id="review-content" style="line-height: 1.6; color: #666;"></p>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div class="panel-title">스코어보드</div>
+                <div class="muted">Top 20</div>
             </div>
-        </div>
-    </div>
-    
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>순위</th>
+                            <th>선수</th>
+                            <th>타수</th>
+                            <th>버디</th>
+                            <th>니어리스트</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsBody">
+                        <tr><td colspan="5" class="status">라운드를 선택하세요.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
     <script>
         const API_BASE_URL = 'https://port-0-hblgolfbakend-mb4ipg5fd735a020.sel4.cloudtype.app';
-        let currentRounds = [];
+        const navMenu = document.getElementById('navMenu');
+        const navToggle = document.getElementById('navToggle');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const roundButtons = document.getElementById('roundButtons');
+        const roundCount = document.getElementById('roundCount');
+        const roundTitle = document.getElementById('roundTitle');
+        const roundMeta = document.getElementById('roundMeta');
+        const winnerMeta = document.getElementById('winnerMeta');
+        const statsSummary = document.getElementById('statsSummary');
+        const recordsBody = document.getElementById('recordsBody');
+        const yearSelect = document.getElementById('yearSelect');
+        const searchInput = document.getElementById('searchInput');
+
+        let rounds = [];
         let currentRoundId = null;
-        
-        // 페이지 로드 시 초기화
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', () => {
+            attachEvents();
             loadRounds();
-            setupEventListeners();
         });
-        
-        // 이벤트 리스너 설정
-        function setupEventListeners() {
-            // 모바일 메뉴 토글
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            menuToggle?.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-            });
-            
-            // 연도 선택 변경
-            document.getElementById('year-select').addEventListener('change', function() {
-                loadRounds(this.value);
-            });
-            
-            // 검색 기능
-            const searchBtn = document.getElementById('search-btn');
-            const searchInput = document.getElementById('search-input');
-            
-            searchBtn.addEventListener('click', performSearch);
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
+
+        function attachEvents() {
+            navToggle?.addEventListener('click', () => navMenu.classList.toggle('open'));
+            navMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('open')));
+            logoutBtn?.addEventListener('click', handleLogout);
+            yearSelect.addEventListener('change', loadRounds);
+            searchInput.addEventListener('input', renderRoundButtons);
         }
-        
-        // 라운딩 목록 로드
-        async function loadRounds(year = '2025') {
+
+        function handleLogout() {
+            sessionStorage.removeItem('hbl_authenticated');
+            sessionStorage.removeItem('hbl_auth_time');
+            window.location.href = 'index.html';
+        }
+
+        async function loadRounds() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/rounds`);
-                if (!response.ok) {
-                    throw new Error('라운딩 데이터를 불러올 수 없습니다.');
-                }
-                
-                const rounds = await response.json();
-                currentRounds = rounds.filter(round => round.round_date.startsWith(year));
-                
-                displayRoundList();
-                
-                // 첫 번째 라운딩 자동 선택
-                if (currentRounds.length > 0) {
-                    selectRound(currentRounds[0].id);
-                }
-                
-            } catch (error) {
-                console.error('라운딩 로드 오류:', error);
-                showError('라운딩 목록을 불러오는데 실패했습니다.');
+                const res = await fetch(`${API_BASE_URL}/api/rounds`);
+                if (!res.ok) throw new Error('라운드 로드 실패');
+                rounds = await res.json();
+            } catch (err) {
+                console.warn('API 실패, fallback 사용:', err);
+                rounds = getFallbackRounds();
             }
+            renderRoundButtons();
         }
-        
-        // 라운딩 목록 표시
-        function displayRoundList() {
-            const roundList = document.getElementById('round-list');
-            
-            if (currentRounds.length === 0) {
-                roundList.innerHTML = '<div class="error">해당 연도의 라운딩 기록이 없습니다.</div>';
+
+        function renderRoundButtons() {
+            const keyword = searchInput.value.trim().toLowerCase();
+            const year = yearSelect.value;
+            const filtered = rounds.filter(r => r.round_date.startsWith(year) && `${r.course_name} ${r.round_name}`.toLowerCase().includes(keyword));
+            roundCount.textContent = `${filtered.length}개 라운드`;
+
+            if (filtered.length === 0) {
+                roundButtons.innerHTML = '<div class="status">해당 조건의 라운드가 없습니다.</div>';
                 return;
             }
-            
-            roundList.innerHTML = '';
-            
-            currentRounds.forEach((round, index) => {
-                const button = document.createElement('button');
-                button.className = `round-btn ${index === 0 ? 'active' : ''}`;
-                button.setAttribute('data-round-id', round.id);
-                button.textContent = `${round.course_name || '미지정'} (${formatDate(round.round_date)})`;
-                
-                button.addEventListener('click', () => {
-                    // 기존 활성 버튼 비활성화
-                    document.querySelectorAll('.round-btn').forEach(btn => btn.classList.remove('active'));
-                    // 현재 버튼 활성화
-                    button.classList.add('active');
-                    // 라운딩 선택
-                    selectRound(round.id);
-                });
-                
-                roundList.appendChild(button);
+
+            roundButtons.innerHTML = filtered.map((round, idx) => `
+                <button class="round-btn ${round.id === currentRoundId || (!currentRoundId && idx === 0) ? 'active' : ''}" data-id="${round.id}">
+                    ${round.course_name || '코스 미정'} · ${formatDate(round.round_date)}
+                </button>
+            `).join('');
+
+            roundButtons.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', () => selectRound(btn.dataset.id));
             });
+
+            const firstId = filtered[0]?.id;
+            if (firstId && !currentRoundId) {
+                selectRound(firstId);
+            }
         }
-        
-        // 라운딩 선택
+
         async function selectRound(roundId) {
             currentRoundId = roundId;
-            
+            roundButtons.querySelectorAll('button').forEach(btn => btn.classList.toggle('active', btn.dataset.id === roundId));
+
             try {
-                // 라운딩 정보 로드
-                await loadRoundInfo(roundId);
-                // 스코어 로드
-                await loadScores(roundId);
-                // 통계 로드
-                await loadStats(roundId);
-                
-            } catch (error) {
-                console.error('라운딩 데이터 로드 오류:', error);
-                showError('라운딩 데이터를 불러오는데 실패했습니다.');
+                const round = rounds.find(r => r.id == roundId) || {};
+                roundTitle.textContent = round.round_name || '라운드 정보';
+                roundMeta.textContent = `${formatDate(round.round_date)} · ${round.course_name || '코스 미정'} · 티타임 ${formatTime(round.tee_time) || '-'}`;
+
+                const [statsRes, scoresRes] = await Promise.all([
+                    fetch(`${API_BASE_URL}/api/rounds/${roundId}/stats`).then(r => r.ok ? r.json() : {}),
+                    fetch(`${API_BASE_URL}/api/rounds/${roundId}/scores`).then(r => r.ok ? r.json() : [])
+                ]);
+
+                renderStats(statsRes, round);
+                renderScores(scoresRes);
+            } catch (err) {
+                console.warn('라운드 세부 로드 실패:', err);
+                renderStats({}, {});
+                recordsBody.innerHTML = '<tr><td colspan="5" class="status">스코어를 불러오지 못했습니다.</td></tr>';
             }
         }
-        
-        // 라운딩 정보 로드
-        async function loadRoundInfo(roundId) {
-            const response = await fetch(`${API_BASE_URL}/api/rounds/${roundId}`);
-            if (!response.ok) throw new Error('라운딩 정보 로드 실패');
-            
-            const round = await response.json();
-            
-            // 우승자 정보 가져오기
-            const scoresResponse = await fetch(`${API_BASE_URL}/api/rounds/${roundId}/scores`);
-            const scores = await scoresResponse.json();
-            const winner = scores.find(score => score.ranking === 1);
-            
-            const headerHtml = `
-                <div class="round-title">
-                    <h1 class="round-name">${round.round_name}</h1>
-                    <div class="round-date">${formatDateTime(round.round_date, round.tee_time)}</div>
-                    <div class="round-venue">${round.course_name || '골프장 정보 없음'}</div>
-                    <div class="round-weather">${formatWeather(round.weather, round.temperature, round.wind_condition)}</div>
+
+        function renderStats(stats = {}, round = {}) {
+            winnerMeta.textContent = stats.top_scorer || '우승자: 준비 중';
+            statsSummary.innerHTML = `
+                <div class="stat-card">
+                    <div class="label">참가 인원</div>
+                    <div class="value">${stats.participant_count ?? '-'}</div>
                 </div>
-                
-                <div class="round-info">
-                    <div class="winner-info">
-                        ${winner ? `
-                            <img src="${winner.photo_url || '/api/placeholder/60/60'}" alt="${winner.name}" class="winner-photo">
-                            <div class="winner-details">
-                                <div class="winner-label">우승자</div>
-                                <div class="winner-name">${winner.name} (${winner.total_score}타)</div>
-                            </div>
-                        ` : `
-                            <div class="winner-details">
-                                <div class="winner-label">우승자</div>
-                                <div class="winner-name">미정</div>
-                            </div>
-                        `}
-                    </div>
+                <div class="stat-card">
+                    <div class="label">평균 타수</div>
+                    <div class="value">${stats.avg_score ? stats.avg_score.toFixed(1) : 'N/A'}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">베스트 스코어</div>
+                    <div class="value">${stats.best_score ?? '-'}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">코스</div>
+                    <div class="value">${round.course_name || '-'}</div>
                 </div>
             `;
-            
-            document.getElementById('round-header').innerHTML = headerHtml;
         }
-        
-        // 스코어 로드
-        async function loadScores(roundId) {
-            const response = await fetch(`${API_BASE_URL}/api/rounds/${roundId}/scores`);
-            if (!response.ok) throw new Error('스코어 로드 실패');
-            
-            const scores = await response.json();
-            const tbody = document.getElementById('records-tbody');
-            
-            if (scores.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">스코어 기록이 없습니다.</td></tr>';
+
+        function renderScores(scores = []) {
+            if (!scores.length) {
+                recordsBody.innerHTML = '<tr><td colspan="5" class="status">기록이 없습니다.</td></tr>';
                 return;
             }
-            
-            tbody.innerHTML = '';
-            
-            scores.forEach(score => {
-                const rankClass = score.ranking === 1 ? 'first' : score.ranking === 2 ? 'second' : score.ranking === 3 ? 'third' : '';
-                const scoreClass = getScoreClass(score.total_score);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><span class="rank ${rankClass}">${score.ranking}위</span></td>
-                    <td class="player-info">
-                        <img src="${score.photo_url || '/api/placeholder/40/40'}" alt="${score.name}" class="player-photo">
-                        <span class="player-name"><a href="#">${score.name}</a></span>
+
+            recordsBody.innerHTML = scores.slice(0, 20).map(score => `
+                <tr>
+                    <td><span class="rank-badge">#${score.ranking}</span></td>
+                    <td>
+                        <div class="row">
+                            <img class="avatar" src="${score.photo_url || 'images/jay.png'}" alt="${score.name}">
+                            <span>${score.name}</span>
+                        </div>
                     </td>
-                    <td class="score ${scoreClass}">${score.total_score}</td>
-                    <td>${score.birdie_count || 0}개</td>
-                    <td>${score.nearest_count || 0}개</td>
-                `;
-                tbody.appendChild(row);
-            });
+                    <td>${score.total_score ?? '-'}</td>
+                    <td>${score.birdie_count ?? 0}</td>
+                    <td>${score.nearest_count ?? 0}</td>
+                </tr>
+            `).join('');
         }
-        
-        // 통계 로드
-        async function loadStats(roundId) {
-            const response = await fetch(`${API_BASE_URL}/api/rounds/${roundId}/stats`);
-            if (!response.ok) throw new Error('통계 로드 실패');
-            
-            const stats = await response.json();
-            const round = currentRounds.find(r => r.id == roundId);
-            
-            const statsHtml = `
-                <div class="stat-card">
-                    <div class="stat-title">참가자</div>
-                    <div class="stat-value">${stats.participant_count}명</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-title">평균 스코어</div>
-                    <div class="stat-value">${stats.avg_score ? stats.avg_score.toFixed(1) : 'N/A'}</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-title">베스트 스코어</div>
-                    <div class="stat-value">${stats.best_score || 'N/A'}</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-title">라운딩 시간</div>
-                    <div class="stat-value">${round?.round_time || 'N/A'}</div>
-                </div>
-            `;
-            
-            document.getElementById('stats-summary').innerHTML = statsHtml;
-        }
-        
-        // 검색 기능
-        function performSearch() {
-            const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
-            
-            if (!searchTerm) {
-                displayRoundList();
-                return;
-            }
-            
-            const filteredRounds = currentRounds.filter(round => 
-                (round.course_name || '').toLowerCase().includes(searchTerm) ||
-                round.round_name.toLowerCase().includes(searchTerm)
-            );
-            
-            const roundList = document.getElementById('round-list');
-            
-            if (filteredRounds.length === 0) {
-                roundList.innerHTML = '<div class="error">검색 결과가 없습니다.</div>';
-                return;
-            }
-            
-            roundList.innerHTML = '';
-            
-            filteredRounds.forEach((round, index) => {
-                const button = document.createElement('button');
-                button.className = `round-btn ${index === 0 ? 'active' : ''}`;
-                button.setAttribute('data-round-id', round.id);
-                button.textContent = `${round.course_name || '미지정'} (${formatDate(round.round_date)})`;
-                
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.round-btn').forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    selectRound(round.id);
-                });
-                
-                roundList.appendChild(button);
-            });
-            
-            // 첫 번째 검색 결과 자동 선택
-            if (filteredRounds.length > 0) {
-                selectRound(filteredRounds[0].id);
-            }
-        }
-        
-        // 유틸리티 함수들
+
         function formatDate(dateString) {
-            const date = new Date(dateString);
-            return `${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+            if (!dateString) return '-';
+            const d = new Date(dateString);
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const w = ['일','월','화','수','목','금','토'][d.getDay()];
+            return `${y}.${m}.${day} (${w})`;
         }
-        
-        function formatDateTime(dateString, timeString) {
-            const date = new Date(dateString);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const weekDay = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
-            
-            let timeStr = '';
-            if (timeString) {
-                const [hours, minutes] = timeString.split(':');
-                const hour = parseInt(hours);
-                const period = hour >= 12 ? '오후' : '오전';
-                const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-                timeStr = ` ${period} ${displayHour}:${minutes} 티오프`;
-            }
-            
-            return `${year}.${month}.${day} (${weekDay})${timeStr}`;
+
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            const [h, m] = timeString.split(':');
+            return `${h}:${m}`;
         }
-        
-        function formatWeather(weather, temperature, windCondition) {
-            let weatherStr = '';
-            if (weather) weatherStr += `날씨: ${weather}`;
-            if (temperature) weatherStr += `, 기온: ${temperature}°C`;
-            if (windCondition) weatherStr += `, 바람: ${windCondition}`;
-            return weatherStr || '날씨 정보 없음';
-        }
-        
-        function getScoreClass(score) {
-            if (score <= 90) return 'best';
-            if (score <= 100) return 'good';
-            if (score <= 110) return 'average';
-            return 'poor';
-        }
-        
-        function showError(message) {
-            const errorHtml = `<div class="error">${message}</div>`;
-            document.getElementById('round-header').innerHTML = errorHtml;
-            document.getElementById('round-list').innerHTML = errorHtml;
-            document.getElementById('stats-summary').innerHTML = errorHtml;
-            document.getElementById('records-tbody').innerHTML = `<tr><td colspan="5">${message}</td></tr>`;
+
+        function getFallbackRounds() {
+            return [
+                { id: '1', round_name: '6월 정기 라운드', round_date: '2025-06-06', tee_time: '07:30', course_name: '스톤게이트 CC' },
+                { id: '2', round_name: '5월 정기 라운드', round_date: '2025-05-11', tee_time: '07:40', course_name: '발리오스 CC' }
+            ];
         }
     </script>
 </body>

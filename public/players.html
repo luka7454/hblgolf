@@ -3,663 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBL 골프 클럽 - 선수정보</title>
+    <title>HBL 골프 클럽 | 선수</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Noto Sans KR', sans-serif;
+        :root {
+            --bg: #04090f;
+            --panel: rgba(16, 31, 42, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e9f1f6;
+            --muted: #9fb3c2;
+            --accent: #4ce2b1;
+            --accent-2: #6cb7ff;
+            --radius: 16px;
         }
-        
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(76, 226, 177, 0.12), transparent 25%),
+                radial-gradient(circle at 80% 0%, rgba(108, 183, 255, 0.12), transparent 28%),
+                linear-gradient(160deg, #03060c 0%, #06121a 40%, #081d21 75%, #04090f 100%);
+            color: var(--text);
+            font-family: 'Manrope', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+            padding: 0 20px 40px;
         }
-        
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem 2rem;
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
+
+        a { color: inherit; text-decoration: none; }
+
+        header {
+            position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(4, 9, 15, 0.9), rgba(4, 9, 15, 0.6));
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
         }
-        
-        .logo-text {
-            font-family: Arial, sans-serif;
-            font-weight: 900;
-            font-size: 32px;
-            letter-spacing: -1px;
-            color: #000;
-        }
-        
-        .logo {
-            position: absolute;
-            left: 2rem;
-        }
-        
-        .nav-menu {
+
+        .topbar {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px 0;
             display: flex;
-            list-style: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
-        
-        .nav-menu li {
-            margin-left: 2rem;
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        .nav-menu a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #23b47e, #0f5f4f);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
         }
-        
-        .nav-menu a:hover {
-            color: #0a5e2f;
-            border-bottom: 2px solid #0a5e2f;
+
+        .brand-text { display: flex; flex-direction: column; gap: 2px; }
+        .brand-text strong { font-size: 18px; letter-spacing: -0.02em; }
+        .brand-text span { color: var(--muted); font-size: 12px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
         }
-        
-        .active {
-            color: #0a5e2f !important;
-            border-bottom: 2px solid #0a5e2f;
+
+        nav a {
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: var(--muted);
+            font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease;
         }
-        
-        .menu-toggle {
+
+        nav a.active,
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+        }
+
+        .ghost-btn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: transparent;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .ghost-btn:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-1px); }
+
+        .nav-toggle {
             display: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 24px auto 0;
+            display: flex;
             flex-direction: column;
-            cursor: pointer;
-            position: absolute;
-            right: 2rem;
+            gap: 18px;
         }
-        
-        .bar {
-            width: 25px;
-            height: 3px;
-            background-color: #333;
-            margin: 3px 0;
-            transition: all 0.3s ease;
+
+        .hero {
+            border-radius: 22px;
+            padding: clamp(18px, 3vw, 26px);
+            background: linear-gradient(135deg, rgba(108, 183, 255, 0.12), rgba(8, 29, 33, 0.85));
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
         }
-        
-        .main-content {
-            margin-top: 85px;
-            padding: 20px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* 선수정보 페이지 스타일 */
-        .search-container {
+
+        .hero h1 { font-size: clamp(26px, 4vw, 34px); letter-spacing: -0.04em; margin-bottom: 8px; }
+        .hero p { color: var(--muted); line-height: 1.5; }
+
+        .filters {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-        }
-        
-        .search-box {
-            position: relative;
-            width: 300px;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #00c73c;
-            border-radius: 4px;
-            font-size: 16px;
-            outline: none;
-        }
-        
-        .search-btn {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 45px;
-            background: none;
-            border: none;
-            color: #00c73c;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        
-        .alphabet-filter {
-            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 30px;
-            gap: 5px;
+            margin-top: 12px;
         }
-        
+
+        .pill-input {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+        }
+
         .filter-btn {
-            min-width: 40px;
-            height: 40px;
-            border: 1px solid #ddd;
-            border-radius: 50px;
-            background-color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted);
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 16px;
+            font-weight: 700;
         }
-        
-        .filter-btn:hover {
-            background-color: #f0f0f0;
+
+        .filter-btn.active { background: rgba(255, 255, 255, 0.08); color: var(--text); }
+
+        .grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         }
-        
-        .filter-btn.active {
-            background-color: #3250d3;
-            color: white;
-            border-color: #3250d3;
+
+        .card {
+            padding: 16px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.28);
+            display: grid;
+            gap: 10px;
         }
-        
-        .player-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 50px;
-            background-color: white;
-            border-radius: 5px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+        .card-head { display: flex; justify-content: space-between; align-items: center; }
+        .name { font-weight: 800; letter-spacing: -0.02em; }
+        .muted { color: var(--muted); font-size: 13px; }
+        .badge {
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            font-size: 12px;
+            letter-spacing: 0.02em;
         }
-        
-        .player-table th {
-            background-color: #3250d3;
-            color: white;
-            padding: 15px 10px;
-            text-align: center;
-            font-weight: 500;
-        }
-        
-        .player-table td {
-            padding: 15px 10px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .player-table tr:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .fav-icon {
-            color: #ccc;
-            cursor: pointer;
-            font-size: 20px;
-        }
-        
-        .fav-icon.active {
-            color: #ffcc00;
-        }
-        
-        .player-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
             object-fit: cover;
-            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.08);
         }
-        
-        .player-name {
-            display: flex;
-            align-items: center;
-            text-align: left;
-        }
-        
-        .player-name a {
-            color: #3250d3;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .player-name a:hover {
-            text-decoration: underline;
-        }
-        
-        .flag-img {
-            width: 24px;
-            height: 16px;
-        }
-        
-        .sponsor-img {
-            max-height: 40px;
-            max-width: 120px;
-        }
-        
-        .membership-type {
-            font-weight: 500;
-        }
-        
-        .membership-id {
-            color: #666;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 50px;
+
+        .row { display: flex; gap: 12px; align-items: center; }
+        .chip { padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); font-weight: 600; }
+
+        .star {
+            cursor: pointer;
+            color: #ffc163;
             font-size: 18px;
-            color: #666;
+            opacity: 0.6;
         }
-        
-        .error {
-            text-align: center;
-            padding: 50px;
-            color: #dc3545;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 50px;
-            color: #666;
-            font-style: italic;
-        }
-        
-        @media (max-width: 992px) {
-            .player-table th:nth-child(6),
-            .player-table td:nth-child(6) {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .nav-menu {
+
+        .star.active { opacity: 1; }
+
+        @media (max-width: 920px) {
+            nav {
                 position: fixed;
-                left: -100%;
                 top: 70px;
-                flex-direction: column;
-                background-color: #fff;
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
-                padding: 1rem 0;
-            }
-            
-            .nav-menu.active {
                 left: 0;
+                right: 0;
+                padding: 14px;
+                background: rgba(4, 9, 15, 0.95);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--border);
+                transform: translateY(-120%);
+                transition: transform 0.2s ease;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
             }
-            
-            .nav-menu li {
-                margin: 1rem 0;
-            }
-            
-            .menu-toggle {
-                display: flex;
-            }
-            
-            .header {
-                justify-content: flex-start;
-                padding-left: 1rem;
-            }
-            
-            .search-box {
-                width: 100%;
-            }
-            
-            .player-table th:nth-child(5),
-            .player-table td:nth-child(5) {
-                display: none;
-            }
-            
-            .filter-btn {
-                min-width: 35px;
-                height: 35px;
-                font-size: 14px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .alphabet-filter {
-                gap: 3px;
-            }
-            
-            .filter-btn {
-                min-width: 30px;
-                height: 30px;
-                font-size: 12px;
-            }
-            
-            .player-img {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .player-table th:nth-child(2),
-            .player-table td:nth-child(2) {
-                display: none;
-            }
+            nav.open { transform: translateY(0); }
+            .nav-toggle { display: inline-flex; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <div class="logo-text">HBL</div>
-        </div>
-        
-        <ul class="nav-menu">
-            <li><a href="main.html">ABOUT HBL</a></li>
-            <li><a href="schedule.html">일정</a></li>
-            <li><a href="tournament-records.html">리더보드</a></li>
-            <li><a href="tournament-records.html">기록</a></li>
-            <li><a href="players.html" class="active">선수정보</a></li>
-            <li><a href="#">이벤트</a></li>
-        </ul>
-        
-        <div class="menu-toggle">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-    </header>
-    
-    <div class="main-content">
-        <div class="search-container">
-            <div class="search-box">
-                <input type="text" class="search-input" placeholder="선수 이름 검색" id="search-input">
-                <button class="search-btn" id="search-btn">🔍</button>
+    <header>
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-mark">HBL</div>
+                <div class="brand-text">
+                    <strong>HBL Golf Club</strong>
+                    <span>Players</span>
+                </div>
+            </div>
+            <nav id="navMenu">
+                <a href="main.html">대시보드</a>
+                <a href="schedule.html">일정</a>
+                <a href="tournament-records.html">기록</a>
+                <a href="players.html" class="active">선수</a>
+            </nav>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="ghost-btn" id="logoutBtn" type="button">로그아웃</button>
+                <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기">☰</button>
             </div>
         </div>
-        
-        <div class="alphabet-filter">
-            <button class="filter-btn active" data-filter="all">전체</button>
-            <button class="filter-btn" data-filter="ㄱ">ㄱ</button>
-            <button class="filter-btn" data-filter="ㄴ">ㄴ</button>
-            <button class="filter-btn" data-filter="ㄷ">ㄷ</button>
-            <button class="filter-btn" data-filter="ㄹ">ㄹ</button>
-            <button class="filter-btn" data-filter="ㅁ">ㅁ</button>
-            <button class="filter-btn" data-filter="ㅂ">ㅂ</button>
-            <button class="filter-btn" data-filter="ㅅ">ㅅ</button>
-            <button class="filter-btn" data-filter="ㅇ">ㅇ</button>
-            <button class="filter-btn" data-filter="ㅈ">ㅈ</button>
-            <button class="filter-btn" data-filter="ㅊ">ㅊ</button>
-            <button class="filter-btn" data-filter="ㅋ">ㅋ</button>
-            <button class="filter-btn" data-filter="ㅌ">ㅌ</button>
-            <button class="filter-btn" data-filter="ㅍ">ㅍ</button>
-            <button class="filter-btn" data-filter="ㅎ">ㅎ</button>
-            <button class="filter-btn" data-filter="A-Z">A-Z</button>
-        </div>
-        
-        <table class="player-table">
-            <thead>
-                <tr>
-                    <th>FAV</th>
-                    <th>국적</th>
-                    <th>이름</th>
-                    <th>회원구분</th>
-                    <th>입회번호</th>
-                    <th>소속</th>
-                </tr>
-            </thead>
-            <tbody id="players-tbody">
-                <tr>
-                    <td colspan="6" class="loading">선수 정보를 불러오는 중...</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>HBL 멤버 라인업</h1>
+            <p>멤버십, 국적, 스폰서 정보를 한 번에. 이름을 검색하거나 이니셜로 필터링하세요.</p>
+            <div class="filters">
+                <input class="pill-input" id="searchInput" placeholder="이름, 코스, 국적 검색" />
+                <button class="filter-btn active" data-filter="all">전체</button>
+                <button class="filter-btn" data-filter="A-Z">A-Z</button>
+                <button class="filter-btn" data-filter="ㄱ">ㄱ</button>
+                <button class="filter-btn" data-filter="ㄴ">ㄴ</button>
+                <button class="filter-btn" data-filter="ㄷ">ㄷ</button>
+                <button class="filter-btn" data-filter="ㄹ">ㄹ</button>
+                <button class="filter-btn" data-filter="ㅁ">ㅁ</button>
+                <button class="filter-btn" data-filter="ㅂ">ㅂ</button>
+                <button class="filter-btn" data-filter="ㅅ">ㅅ</button>
+                <button class="filter-btn" data-filter="ㅇ">ㅇ</button>
+                <button class="filter-btn" data-filter="ㅈ">ㅈ</button>
+                <button class="filter-btn" data-filter="ㅊ">ㅊ</button>
+                <button class="filter-btn" data-filter="ㅋ">ㅋ</button>
+                <button class="filter-btn" data-filter="ㅌ">ㅌ</button>
+                <button class="filter-btn" data-filter="ㅍ">ㅍ</button>
+                <button class="filter-btn" data-filter="ㅎ">ㅎ</button>
+            </div>
+        </section>
+
+        <section id="playersGrid" class="grid">
+            <!-- cards rendered by script -->
+        </section>
+    </main>
+
     <script>
         const API_BASE_URL = 'https://port-0-hblgolfbakend-mb4ipg5fd735a020.sel4.cloudtype.app';
+        const navMenu = document.getElementById('navMenu');
+        const navToggle = document.getElementById('navToggle');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const playersGrid = document.getElementById('playersGrid');
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = Array.from(document.querySelectorAll('.filter-btn'));
+
         let allPlayers = [];
-        let filteredPlayers = [];
-        let currentFilter = 'all';
-        
-        // 페이지 로드 시 초기화
-        document.addEventListener('DOMContentLoaded', function() {
+        let favorites = new Set();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            attachEvents();
             loadPlayers();
-            setupEventListeners();
         });
-        
-        // 이벤트 리스너 설정
-        function setupEventListeners() {
-            // 모바일 메뉴 토글
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navMenu = document.querySelector('.nav-menu');
-            f
-            menuToggle?.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-            });
-            
-            // 필터 버튼 이벤트
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    currentFilter = this.getAttribute('data-filter');
-                    applyFilter();
-                });
-            });
-            
-            // 검색 기능
-            const searchBtn = document.getElementById('search-btn');
-            const searchInput = document.getElementById('search-input');
-            
-            searchBtn.addEventListener('click', performSearch);
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-            
-            // 실시간 검색
-            searchInput.addEventListener('input', function() {
-                if (this.value.trim() === '') {
-                    applyFilter();
-                }
-            });
+
+        function attachEvents() {
+            navToggle?.addEventListener('click', () => navMenu.classList.toggle('open'));
+            navMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navMenu.classList.remove('open')));
+            logoutBtn?.addEventListener('click', handleLogout);
+            searchInput.addEventListener('input', renderPlayers);
+            filterButtons.forEach(btn => btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderPlayers();
+            }));
         }
-        
-        // 선수 데이터 로드
+
+        function handleLogout() {
+            sessionStorage.removeItem('hbl_authenticated');
+            sessionStorage.removeItem('hbl_auth_time');
+            window.location.href = 'index.html';
+        }
+
         async function loadPlayers() {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/players`);
-                if (!response.ok) {
-                    throw new Error('선수 데이터 로드 실패');
-                }
-                
-                allPlayers = await response.json();
-                filteredPlayers = [...allPlayers];
-                
-                displayPlayers();
-                
-                if (allPlayers.length === 0) {
-                    showNoData();
-                }
-                
-            } catch (error) {
-                console.error('선수 데이터 로드 오류:', error);
-                showError('선수 정보를 불러올 수 없습니다. API 서버가 실행 중인지 확인해주세요.');
-                loadFallbackData();
+                const res = await fetch(`${API_BASE_URL}/api/players`);
+                if (!res.ok) throw new Error('플레이어 로드 실패');
+                allPlayers = await res.json();
+            } catch (err) {
+                console.warn('API 실패, fallback 사용:', err);
+                allPlayers = getFallbackPlayers();
             }
+            renderPlayers();
         }
-        
-        // 선수 목록 표시
-        function displayPlayers() {
-            const tbody = document.getElementById('players-tbody');
-            
-            if (filteredPlayers.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="no-data">표시할 선수가 없습니다.</td></tr>';
+
+        function renderPlayers() {
+            const keyword = searchInput.value.trim().toLowerCase();
+            const filter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+
+            const filtered = allPlayers.filter(player => {
+                const name = (player.name || '').toLowerCase();
+                const eng = (player.eng_name || '').toLowerCase();
+                const nat = (player.nationality || '').toLowerCase();
+                const text = `${name} ${eng} ${nat}`;
+                const matchKeyword = !keyword || text.includes(keyword);
+
+                if (!matchKeyword) return false;
+                if (filter === 'all') return true;
+                if (filter === 'A-Z') return /^[A-Za-z]/.test(player.eng_name || player.name || '');
+                return getKoreanInitial(player.name || '') === filter;
+            });
+
+            if (filtered.length === 0) {
+                playersGrid.innerHTML = '<div class="card"><div class="muted">조건에 맞는 선수가 없습니다.</div></div>';
                 return;
             }
-            
-            tbody.innerHTML = '';
-            
-            filteredPlayers.forEach(player => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><span class="fav-icon" onclick="toggleFavorite(this)">★</span></td>
-                    <td><img src="${getFlagImage(player.nationality)}" alt="${player.nationality} 국기" class="flag-img"></td>
-                    <td class="player-name">
-                        <img src="${player.photo_url || '/api/placeholder/50/50'}" alt="${player.name}" class="player-img">
-                        <a href="${getPlayerProfileUrl(player.name)}">${player.name}</a>
-                    </td>
-                    <td class="membership-type">${player.membership_type || 'HBL 정회원'}</td>
-                    <td class="membership-id">${player.membership_id || 'HBL ' + player.join_year}</td>
-                    <td><img src="${player.sponsor_img || '/api/placeholder/120/40'}" alt="스폰서" class="sponsor-img"></td>
-                `;
-                tbody.appendChild(row);
+
+            playersGrid.innerHTML = filtered.map(player => `
+                <article class="card" data-player="${player.id || ''}">
+                    <div class="card-head">
+                        <div>
+                            <div class="name">${player.name || '이름 미정'}</div>
+                            <div class="muted">${player.eng_name || ''}</div>
+                        </div>
+                        <div class="star ${favorites.has(player.id) ? 'active' : ''}" data-id="${player.id || ''}">★</div>
+                    </div>
+                    <div class="row">
+                        <img class="avatar" src="${player.photo_url || 'images/jay.png'}" alt="${player.name || 'player'}">
+                        <div style="display:grid; gap:6px;">
+                            <span class="badge">멤버십 ${player.membership_type || 'HBL'}</span>
+                            <span class="muted">가입연도 ${player.join_year || '-'}</span>
+                        </div>
+                    </div>
+                    <div class="row" style="flex-wrap:wrap;">
+                        <span class="chip">국적 ${player.nationality || 'KR'}</span>
+                        <span class="chip">스폰서 ${player.sponsor || player.sponsor_img ? '연결됨' : '없음'}</span>
+                    </div>
+                    <a class="muted" href="${getPlayerProfileUrl(player.name)}">프로필 보기 →</a>
+                </article>
+            `).join('');
+
+            document.querySelectorAll('.star').forEach(star => {
+                star.addEventListener('click', () => {
+                    const id = star.dataset.id;
+                    if (!id) return;
+                    favorites.has(id) ? favorites.delete(id) : favorites.add(id);
+                    star.classList.toggle('active');
+                });
             });
         }
-        
-        // 필터 적용
-        function applyFilter() {
-            if (currentFilter === 'all') {
-                filteredPlayers = [...allPlayers];
-            } else if (currentFilter === 'A-Z') {
-                filteredPlayers = allPlayers.filter(player => 
-                    /^[A-Za-z]/.test(player.name) || /^[A-Za-z]/.test(player.eng_name || '')
-                );
-            } else {
-                // 한글 초성 필터링 (간단한 구현)
-                filteredPlayers = allPlayers.filter(player => {
-                    const firstChar = player.name.charAt(0);
-                    return getKoreanInitial(firstChar) === currentFilter;
-                });
-            }
-            
-            displayPlayers();
-        }
-        
-        // 검색 수행
-        function performSearch() {
-            const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
-            
-            if (!searchTerm) {
-                applyFilter();
-                return;
-            }
-            
-            filteredPlayers = allPlayers.filter(player => 
-                player.name.toLowerCase().includes(searchTerm) ||
-                (player.eng_name && player.eng_name.toLowerCase().includes(searchTerm)) ||
-                (player.nationality && player.nationality.toLowerCase().includes(searchTerm))
-            );
-            
-            displayPlayers();
-        }
-        
-        // 즐겨찾기 토글
-        function toggleFavorite(icon) {
-            icon.classList.toggle('active');
-            
-            // 실제 구현에서는 여기서 서버에 즐겨찾기 상태를 저장할 수 있습니다.
-            const playerId = icon.closest('tr').getAttribute('data-player-id');
-            console.log('즐겨찾기 토글:', playerId);
-        }
-        
-        // 유틸리티 함수들
-        function getKoreanInitial(char) {
-            const initials = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+
+        function getKoreanInitial(text) {
+            if (!text) return '';
+            const char = text.trim().charAt(0);
             const code = char.charCodeAt(0) - 44032;
+            const initials = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
             if (code >= 0 && code <= 11171) {
                 return initials[Math.floor(code / 588)];
             }
             return '';
         }
-        
-        function getFlagImage(nationality) {
-            const flagMapping = {
-                '미국': 'images/미국.png',
-                '한국': 'images/한국.png',
-                '한국(부산)': 'images/한국.png',
-                '중국': 'images/중국.png',
-                '중국(베이징)': 'images/중국.png',
-                '대한민국': 'images/한국.png',
-                '대한민국(성남)': 'images/한국.png'
-            };
-            
-            return flagMapping[nationality] || 'images/한국.png';
-        }
-        
-        function getPlayerProfileUrl(playerName) {
-            const profileMapping = {
-                '김종혁': 'player-profile-page.html',
+
+        function getPlayerProfileUrl(name) {
+            const map = {
+                '김종형': 'player-profile-page.html',
                 '정인석': 'player-profile-page-suk.html',
                 '김상현': 'player-profile-page-sang.html',
                 '조영복': 'player-profile-page-bok.html'
             };
-            
-            return profileMapping[playerName] || '#';
+            return map[name] || '#';
         }
-        
-        function showError(message) {
-            const tbody = document.getElementById('players-tbody');
-            tbody.innerHTML = `<tr><td colspan="6" class="error">${message}</td></tr>`;
-        }
-        
-        function showNoData() {
-            const tbody = document.getElementById('players-tbody');
-            tbody.innerHTML = '<tr><td colspan="6" class="no-data">등록된 선수가 없습니다.</td></tr>';
-        }
-        
-        // API 연결 실패 시 fallback 데이터
-        function loadFallbackData() {
-            console.log('Fallback 데이터를 사용합니다.');
-            
-            allPlayers = [
-                {
-                    id: 1,
-                    name: '김종혁',
-                    eng_name: 'Kim Jay',
-                    nationality: '미국',
-                    photo_url: 'images/jay.png',
-                    sponsor_img: 'images/stay.png',
-                    membership_type: 'HBL 정회원',
-                    membership_id: 'HBL 2022',
-                    join_year: 2022
-                },
-                {
-                    id: 2,
-                    name: '정인석',
-                    eng_name: 'Jeong In Seok',
-                    nationality: '한국(부산)',
-                    photo_url: 'images/suk.PNG',
-                    sponsor_img: 'images/coupang.png',
-                    membership_type: 'HBL 정회원',
-                    membership_id: 'HBL 2022',
-                    join_year: 2022
-                },
-                {
-                    id: 3,
-                    name: '김상현',
-                    eng_name: 'Kim Sang Hyun',
-                    nationality: '중국(베이징)',
-                    photo_url: 'images/sang.jpg',
-                    sponsor_img: 'images/naver.PNG',
-                    membership_type: 'HBL 정회원',
-                    membership_id: 'HBL 2010',
-                    join_year: 2010
-                },
-                {
-                    id: 4,
-                    name: '조영복',
-                    eng_name: 'Cho Young Bok',
-                    nationality: '대한민국(성남)',
-                    photo_url: 'images/bok2.jpg',
-                    sponsor_img: 'images/kb.webp',
-                    membership_type: 'HBL 정회원',
-                    membership_id: 'HBL 2024',
-                    join_year: 2024
-                }
+
+        function getFallbackPlayers() {
+            return [
+                { id: '1', name: '김종형', eng_name: 'Jay Kim', nationality: 'KR', photo_url: 'images/jay.png', membership_type: '정회원', join_year: 2022, sponsor_img: 'images/stay.png' },
+                { id: '2', name: '정인석', eng_name: 'Inseok Jeong', nationality: 'KR', photo_url: 'images/suk.PNG', membership_type: '정회원', join_year: 2022, sponsor_img: 'images/coupang.png' },
+                { id: '3', name: '김상현', eng_name: 'Sang Kim', nationality: 'CN', photo_url: 'images/sang.jpg', membership_type: '정회원', join_year: 2010, sponsor_img: 'images/naver.PNG' },
+                { id: '4', name: '조영복', eng_name: 'Youngbok Cho', nationality: 'KR', photo_url: 'images/bok2.jpg', membership_type: '정회원', join_year: 2024, sponsor_img: 'images/kb.webp' }
             ];
-            
-            filteredPlayers = [...allPlayers];
-            displayPlayers();
         }
     </script>
 </body>
