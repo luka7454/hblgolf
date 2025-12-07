@@ -198,7 +198,22 @@
             background: rgba(255, 255, 255, 0.04);
             font-size: 12px;
         }
-        .row-toggle { color: var(--muted); font-size: 12px; }
+        .row-toggle {
+            color: var(--muted);
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toggle-btn {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
 
         .rank-badge {
             padding: 6px 10px;
@@ -458,21 +473,23 @@
             recordsBody.innerHTML = scores.slice(0, 20).map(score => {
                 const holes = score.hole_scores && score.hole_scores.length ? score.hole_scores : null;
                 const holeHtml = holes ? holes.map((h, idx) => `<div class="hole-chip">${idx + 1}H · ${h || '-'}</div>`).join('') : '<div class="muted">홀별 스코어가 없습니다.</div>';
+                const uid = score.player_id || score.id || score.name;
                 return `
-                    <tr class="clickable" onclick="toggleHoleDetails('${score.player_id || score.id || score.name}')">
+                    <tr class="clickable">
                         <td><span class="rank-badge">#${score.ranking}</span></td>
                         <td>
                             <div class="row">
                                 <img class="avatar" src="${score.photo_url || 'images/jay.png'}" alt="${score.name}">
                                 <span>${score.name}</span>
                             </div>
-                            <div class="row-toggle">클릭하여 홀별 스코어 보기</div>
                         </td>
                         <td>${score.total_score ?? '-'}</td>
                         <td>${score.birdie_count ?? 0}</td>
-                        <td>${score.nearest_count ?? 0}</td>
+                        <td>
+                            <button class="toggle-btn" onclick="toggleHoleDetails('${uid}')">스코어 ▼</button>
+                        </td>
                     </tr>
-                    <tr class="details-row" id="details-${score.player_id || score.id || score.name}" style="display:none;">
+                    <tr class="details-row" id="details-${uid}" style="display:none;">
                         <td colspan="5" class="details-cell">
                             <div class="hole-grid">${holeHtml}</div>
                         </td>
