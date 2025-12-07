@@ -377,7 +377,7 @@
                         <span class="chip">국적 ${player.nationality || 'KR'}</span>
                         <span class="chip">스폰서 ${player.sponsor || player.sponsor_img ? '연결됨' : '없음'}</span>
                     </div>
-                    <a class="muted" href="${getPlayerProfileUrl(player.name)}">프로필 보기 →</a>
+                    <a class="muted" href="${player.profile_url || getPlayerProfileUrl(player.name)}">프로필 보기 →</a>
                 </article>
             `).join('');
 
@@ -404,7 +404,8 @@
 
         function getPlayerProfileUrl(name) {
             const map = {
-                '김종형': 'player-profile-page.html',
+                '김종혁': 'player-profile-page-jay.html',
+                '김종형': 'player-profile-page-jay.html',
                 '정인석': 'player-profile-page-suk.html',
                 '김상현': 'player-profile-page-sang.html',
                 '조영복': 'player-profile-page-bok.html'
@@ -414,7 +415,7 @@
 
         function getFallbackPlayers() {
             return [
-                { id: '1', name: '김종형', eng_name: 'Jay Kim', nationality: 'KR', photo_url: 'images/jay.png', membership_type: '정회원', join_year: 2022, sponsor_img: 'images/stay.png' },
+                { id: '1', name: '김종혁', eng_name: 'Jay Kim', nationality: 'KR', photo_url: 'images/jay.png', membership_type: '정회원', join_year: 2022, sponsor_img: 'images/stay.png', profile_url: 'player-profile-page-jay.html' },
                 { id: '2', name: '정인석', eng_name: 'Inseok Jeong', nationality: 'KR', photo_url: 'images/suk.PNG', membership_type: '정회원', join_year: 2022, sponsor_img: 'images/coupang.png' },
                 { id: '3', name: '김상현', eng_name: 'Sang Kim', nationality: 'CN', photo_url: 'images/sang.jpg', membership_type: '정회원', join_year: 2010, sponsor_img: 'images/naver.PNG' },
                 { id: '4', name: '조영복', eng_name: 'Youngbok Cho', nationality: 'KR', photo_url: 'images/bok2.jpg', membership_type: '정회원', join_year: 2024, sponsor_img: 'images/kb.webp' }
