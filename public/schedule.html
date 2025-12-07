@@ -227,7 +227,7 @@
             <div class="chips">
                 <span class="chip" id="chipTotal">총 0건</span>
                 <span class="chip" id="chipUpcoming">다가오는 일정 0건</span>
-                <span class="chip">모바일 · 데스크톱 대응</span>
+                <span class="chip">4인</span>
             </div>
             <div class="filters">
                 <select class="pill-input" id="yearSelect">
@@ -288,11 +288,12 @@
         const chipUpcoming = document.getElementById('chipUpcoming');
         const cardCount = document.getElementById('cardCount');
 
+        // 기록 페이지와 동일하게 맞춘 더미 일정(실제 API가 붙으면 대체됨)
         const schedule = [
-            { date: '2025-03-19', name: '3월 정기 라운드', course: '용산 CC', prize: '₩10,000,000', champion: '김기현', status: 'finished' },
-            { date: '2025-04-04', name: '4월 정기 라운드', course: '나라미르 CC', prize: '₩10,000,000', champion: '김종형', status: 'finished' },
-            { date: '2025-05-11', name: '5월 정기 라운드', course: '발리오스 CC', prize: '₩10,000,000', champion: '김종형', status: 'finished' },
-            { date: '2025-06-06', name: '6월 정기 라운드', course: '스톤게이트 CC', prize: '₩10,000,000', champion: '조영복', status: 'upcoming' }
+            { date: '2025-03-19', name: '3월 정기 라운드', course: '양산 CC', prize: '₩1000원빵', champion: '김종혁', status: 'finished' },
+            { date: '2025-04-04', name: '4월 정기 라운드', course: '아라미르 CC', prize: '₩1000원빵', champion: '정인석', status: 'finished' },
+            { date: '2025-05-11', name: '5월 정기 라운드', course: '에스파크 CC', prize: '₩1000원빵', champion: '김상현', status: 'finished' },
+            { date: '2025-06-06', name: '6월 정기 라운드', course: '스톤게이트 CC', prize: '₩1000원빵', champion: '조영복', status: 'upcoming' }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
